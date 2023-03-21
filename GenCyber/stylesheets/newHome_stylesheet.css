@@ -8,14 +8,16 @@ body {
   min-height: 100vh;
 }
 
-form {
-  display: grid;
-  color: white;
-  grid-template-columns: 25% 25% 25% 25%;
-  grid-template-rows: 50% 50%;
+header {
   background-image: linear-gradient(to right, rgba(0, 102, 0, 0.6), rgba(0, 0, 102, 0.6)),
     url("http://localhost/GenCyber/imgs/GettyImages-cyber.jpg");
+  background-color: black;
+}
+
+form {
+  display: grid;
   margin-bottom: 0;
+  grid-template-columns: repeat(4, [col-start] 1fr);
 }
 
 form p, div, span, label {
