@@ -7,11 +7,11 @@ session_start();
 <head>
 <!-- Required meta tags --> 
 <meta charset = "utf-8"/>
-<meta name="sitePath" content="http://localhost/GenCyber/prior_winners.php" />
+<meta name="sitePath" content="http://localhost/GenCyber/teacher_landing.php" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
 <!-- Add your name here one you have helped write this code -->
 <meta name="author" content="Gatlin Zornes">
-<title>Prior Winners - Marshall University GenCyber</title>
+<title>Teacher - Marshall University GenCyber</title>
 <!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/newHome_stylesheet.css" />  -->
 <!-- Might need this -->
 <!-- <base href="http://localhost/GenCyber/" target="_self"> -->
@@ -156,6 +156,12 @@ a.button-prior {
   color: initial;
 }
 
+.wrapper-teacher-links {
+  display: grid;
+  grid-template-columns: repeat(2, [col-start] 1fr);	
+  border: 1px solid black;
+}
+
 .wrapper-main {
   display: grid;
   grid-template-columns: repeat(3, [col-start] 1fr);
@@ -175,30 +181,8 @@ a.button-prior {
   padding-bottom: 3px;
 }
 </style>
+<p class="error">This is my teacher landing page template</p>
 <body>
-  <header>
-    <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-      <button class="button-general" type="submit" name="login">Log In</button>
-      <p>
-        <label for="">Email</label>
-        <input type="text" name="login_user_email" value="<?php echo $login_user_email;?>">
-      </p>
-      <p>
-        <label for="">Password</label>
-        <input type="text" name="user_password" value="<?php echo $user_password;?>">
-      </p>
-      <a class="button-general" href="http://localhost/GenCyber/register.php">Register</a>
-      <br>
-      <div>
-<!--   		need to fix this area -->
-        <span class="error"><?php echo $login_email_error ?></span>
-        <span class="error"><?php echo $login_error;?></span>
-      </div>
-      <div>
-        <span class="error"><?php echo $login_password_error;?></span>
-      </div>
-    </form>
-  </header>
   <div class="wrapper-logos">
     <a class="center" target="_blank" href="https://www.marshall.edu/">
       <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
@@ -215,14 +199,20 @@ a.button-prior {
     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
   </div>
-  <div class="wrapper-main">
-    <div><p><?php if(isset($_SESSION['user_name'])) { printf("Welcome, <span class=error>".$_SESSION['user_name']); } else { printf("Welcome, please log in");}?></p></div>
-    <div>main content here</div>
+  <div class="wrapper-teacher-links">
+    <a class="button-prior" href="http://localhost/GenCyber/teacher_profile_management.php">Profile Management</a>
+    <a class="button-prior" href="http://localhost/GenCyber/teacher_project_management.php">Project Management</a>
+  </div>
+  <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
+    <div></div>
+    <div>Project Information will go here</div>
     <div>
       <p>
         To Do List:<br>
-        1. Begin adding winners to page <br>
-        2. Add selection options
+        1. Work on visual layout for project information<br>
+        2. work on profile mgmt<br>
+        3. work on project mgmt<br>
+        4. ...
       </p>
     </div>
   </div>

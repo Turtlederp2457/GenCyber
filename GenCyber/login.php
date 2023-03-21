@@ -37,6 +37,7 @@ if (isset($_POST['login'])) {
   		$user_password = $_POST['user_password'];
   	}
   	
+  	//might need to select user_role as well to send to different landing page 
   	if (empty($email_error) && empty($password_error)){
       $login_query = "SELECT user_name, user_email, user_password
       				  FROM `users_tbl` 
@@ -53,6 +54,8 @@ if (isset($_POST['login'])) {
       	session_start();
       	$_SESSION['user_name'] = $user_name;
       	header('location: newHome.php');
+//       	$_SESSION['user_role'] = $user_role;
+//       	header('location: your_landing.php')
 
       }
     }

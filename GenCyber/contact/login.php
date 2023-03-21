@@ -1,10 +1,10 @@
 <?php
-$user_email = "";
+$login_user_email = "";
 $user_password = "";
 $user_name = "";
 
-$email_error = "";
-$password_error = "";
+$login_email_error = "";
+$login_password_error = "";
 $login_error = "";
 $login_query = "";
 
@@ -23,28 +23,29 @@ include "database_conn.php";
 //(4)fetch password and compare to input
 if (isset($_POST['login'])) {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  	if (empty($_POST['user_email'])) {
-      $email_error = "Email cannot be empty";
-  	} elseif (!filter_var($_POST['user_email'], FILTER_VALIDATE_EMAIL)) {
-        $email_error = "Check to make sure email format is correct";
+  	if (empty($_POST['login_user_email'])) {
+      $login_email_error = "Email cannot be empty";
+  	} elseif (!filter_var($_POST['login_user_email'], FILTER_VALIDATE_EMAIL)) {
+        $login_email_error = "Check to make sure email format is correct";
   	} else {
-  		$user_email = $_POST['user_email'];
+  		$login_user_email = $_POST['login_user_email'];
   	}
   	
   	if (empty($_POST['user_password'])){
-  		$password_error = "Password cannot be empty";
+  		$login_password_error = "Password cannot be empty";
   	} else {
   		$user_password = $_POST['user_password'];
   	}
   	
+  	//might need to select user_role as well to send to different landing page 
   	if (empty($email_error) && empty($password_error)){
       $login_query = "SELECT user_name, user_email, user_password
       				  FROM `users_tbl` 
       				  WHERE (user_email=? && user_password=?)";
       $stmt = mysqli_prepare($connection, $login_query);
-      $stmt->bind_param("ss", $user_email, $user_password);
+      $stmt->bind_param("ss", $login_user_email, $user_password);
       $stmt->execute();
-      $stmt->bind_result($user_name, $user_email, $user_password);
+      $stmt->bind_result($user_name, $login_user_email, $user_password);
       $result = $stmt->fetch();
       $stmt->close();
       if (!$result){
@@ -53,6 +54,8 @@ if (isset($_POST['login'])) {
       	session_start();
       	$_SESSION['user_name'] = $user_name;
       	header('location: newHome.php');
+//       	$_SESSION['user_role'] = $user_role;
+//       	header('location: your_landing.php')
 
       }
     }

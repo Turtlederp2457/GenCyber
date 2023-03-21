@@ -216,20 +216,25 @@ a.button-prior {
     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
   </div>
   <div style="min-height:65vh" class="wrapper-main">
-    <div>
+    <div style="margin:0" >
       <p><?php if(isset($_SESSION['user_name'])) { printf("Welcome, <span class=error>".$_SESSION['user_name']); } else { printf("Welcome. Please log in");}?></p><br>
       <?php echo "valid login creds: ". "<br>". "admin@admin.com, admin". "<br>"."user@email.com, password"?>
     </div>
     <div>
-      Information about competition and how to join
+      <p>
+        Marshall University's GenCyber program provides summer cybersecurity & cyber forensics camp experiences for both students <br> and teachers at the K-12 level. <br>
+        The goals of the program are to increase interest in cybersecurity careers and diversity in the cybersecurity workforce of the nation, <br> help all students 
+        understand correct and safe online behavior and how they can be good digital citizens, and improve teaching methods for the delivery of cybersecurity content in K-12 curricula. <br>
+        <br>If you are interested in joining, please click <a href="http://localhost/GenCyber/register.php">here</a>
+      </p>
     </div>
-    <div style="font-size:1.0em">
+    <div style="font-size:1.0em; margin:0">
       <p>To Do List:<br>
         1. Fix errors on login form to prevent $login_error from always showing up<br>
         2. Implement logout function <br>
         3. Change login button to logout when user is logged in <br>
-        4. Implement different landing pages using $_SESSION <br>
-        5. Update CSS pages based on browser
+        4. Implement different landing pages using $_SESSION['user_role'?] <br>
+        5. Finalize layout for content area <br>
       </p>
     </div>
   </div>

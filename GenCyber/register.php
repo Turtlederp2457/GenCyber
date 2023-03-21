@@ -130,15 +130,14 @@ if(isset($_POST['register'])){
     } else {
     	$school_address = test_input($_POST['school_address']);
     }
-  
-    //school_city is causing an undefined array key
-//     if (empty(test_input($_POST['school_city']))) {
-//       $school_city_error = "School city cannot be empty";
-//     } elseif (!preg_match("/^[a-zA-Z ]*$/", test_input($_POST['school_city']))) {
-//         $school_city_error = "Only letters allowed";
-//     } else {
-//     	$school_city = test_input($_POST['school_city']);
-//     }
+
+    if (empty(test_input($_POST['school_city']))) {
+      $school_city_error = "School city cannot be empty";
+    } elseif (!preg_match("/^[a-zA-Z ]*$/", test_input($_POST['school_city']))) {
+        $school_city_error = "Only letters allowed";
+    } else {
+    	$school_city = test_input($_POST['school_city']);
+    }
     
     if (empty(test_input($_POST['school_role']))) {
       $school_role_error = "School role cannot be empty";
@@ -462,7 +461,7 @@ a.button-prior {
       <div>
         <p>
           <label for="">School City</label>
-          <input type="text" name="school_name" value="<?php echo $school_city;?>">
+          <input type="text" name="school_city" value="<?php echo $school_city;?>">
         </p>
       </div>
       <div>
@@ -471,7 +470,7 @@ a.button-prior {
       <div>
         <p>
           <label for="">School State</label>
-          <span style="color:purple"	>change to dropdown menu</span>
+          <span style="color:purple">change to dropdown menu</span>
         </p>
       </div>
       <div>
@@ -488,8 +487,8 @@ a.button-prior {
    </div>
    <div style="font-size:1.0em">
       <p>To Do List:<br>
-        1. Figure out why school_city throws undeclared array key<br>
-        2. Finalize layout (to include errors)<br>
+        1. Finalize layout (to include errors)<br>
+        2. Ensure Dr. Yoo agrees with registration page <br>
         3. ...
       </p>
     </div>

@@ -7,11 +7,11 @@ session_start();
 <head>
 <!-- Required meta tags --> 
 <meta charset = "utf-8"/>
-<meta name="sitePath" content="http://localhost/GenCyber/prior_winners.php" />
+<meta name="sitePath" content="http://localhost/GenCyber/judge_management.php" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
 <!-- Add your name here one you have helped write this code -->
 <meta name="author" content="Gatlin Zornes">
-<title>Prior Winners - Marshall University GenCyber</title>
+<title>Judge Management - Marshall University GenCyber</title>
 <!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/newHome_stylesheet.css" />  -->
 <!-- Might need this -->
 <!-- <base href="http://localhost/GenCyber/" target="_self"> -->
@@ -156,6 +156,14 @@ a.button-prior {
   color: initial;
 }
 
+.wrapper-admin-links {
+  display: grid;
+  grid-template-columns: repeat(4, [col-start] 1fr);
+  background-color: none;	
+/*   border-top: 1px solid black; */
+  border: 1px solid black;
+}
+
 .wrapper-main {
   display: grid;
   grid-template-columns: repeat(3, [col-start] 1fr);
@@ -175,30 +183,8 @@ a.button-prior {
   padding-bottom: 3px;
 }
 </style>
+<p class="error">This is my admin->judge mgmt page template</p>
 <body>
-  <header>
-    <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-      <button class="button-general" type="submit" name="login">Log In</button>
-      <p>
-        <label for="">Email</label>
-        <input type="text" name="login_user_email" value="<?php echo $login_user_email;?>">
-      </p>
-      <p>
-        <label for="">Password</label>
-        <input type="text" name="user_password" value="<?php echo $user_password;?>">
-      </p>
-      <a class="button-general" href="http://localhost/GenCyber/register.php">Register</a>
-      <br>
-      <div>
-<!--   		need to fix this area -->
-        <span class="error"><?php echo $login_email_error ?></span>
-        <span class="error"><?php echo $login_error;?></span>
-      </div>
-      <div>
-        <span class="error"><?php echo $login_password_error;?></span>
-      </div>
-    </form>
-  </header>
   <div class="wrapper-logos">
     <a class="center" target="_blank" href="https://www.marshall.edu/">
       <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
@@ -215,14 +201,22 @@ a.button-prior {
     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
   </div>
-  <div class="wrapper-main">
-    <div><p><?php if(isset($_SESSION['user_name'])) { printf("Welcome, <span class=error>".$_SESSION['user_name']); } else { printf("Welcome, please log in");}?></p></div>
-    <div>main content here</div>
+  <div class="wrapper-admin-links">
+    <a class="button-prior" href="http://localhost/GenCyber/teacher_management.php">Teacher Management</a>
+    <a class="button-prior" href="http://localhost/GenCyber/judge_management.php">Judge Management</a>
+    <a class="button-prior" href="http://localhost/GenCyber/admin_project_management.php">Project Management</a>
+    <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
+  </div>
+  <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
+    <div></div>
+    <div></div>
     <div>
       <p>
         To Do List:<br>
-        1. Begin adding winners to page <br>
-        2. Add selection options
+        1. Create new Judges (button). At the click of the button, a web form will Judge's name, email, phone, company name. and the role will be displayed to enter the information. <br>
+		2. Show the list of current active Judges with "inactivate" button <br>
+		3. Show the list of Archive old/inactive Judges with "activate" button <br>
+		4. Assign Judges to project(s) <br>
       </p>
     </div>
   </div>
