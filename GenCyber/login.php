@@ -2,6 +2,7 @@
 $login_user_email = "";
 $user_password = "";
 $user_name = "";
+$user_role = "";
 
 $login_email_error = "";
 $login_password_error = "";
@@ -39,13 +40,13 @@ if (isset($_POST['login'])) {
   	
   	//might need to select user_role as well to send to different landing page 
   	if (empty($email_error) && empty($password_error)){
-      $login_query = "SELECT user_name, user_email, user_password
+      $login_query = "SELECT user_name, user_email, user_password, user_role
       				  FROM `users_tbl` 
       				  WHERE (user_email=? && user_password=?)";
       $stmt = mysqli_prepare($connection, $login_query);
       $stmt->bind_param("ss", $login_user_email, $user_password);
       $stmt->execute();
-      $stmt->bind_result($user_name, $login_user_email, $user_password);
+      $stmt->bind_result($user_name, $login_user_email, $user_password, $user_role);
       $result = $stmt->fetch();
       $stmt->close();
       if (!$result){
@@ -53,10 +54,18 @@ if (isset($_POST['login'])) {
       } else {
       	session_start();
       	$_SESSION['user_name'] = $user_name;
-      	header('location: newHome.php');
-//       	$_SESSION['user_role'] = $user_role;
-//       	header('location: your_landing.php')
-
+      	$_SESSION['user_role'] = $user_role;
+      	switch ($_SESSION['user_role']) {
+      	  case 'A': 
+      	    header('location: admin_landing.php');
+      		break;
+      	  case 'T':
+      		header('location: teacher_landing.php');
+      		break;
+      	  case 'J':
+      		header('location: judge_landing.php');
+      		break;
+      	}
       }
     }
   }  

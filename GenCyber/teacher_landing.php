@@ -165,7 +165,6 @@ a.button-prior {
 .wrapper-main {
   display: grid;
   grid-template-columns: repeat(3, [col-start] 1fr);
-  grid-template-rows: 20% 80%;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -181,7 +180,6 @@ a.button-prior {
   padding-bottom: 3px;
 }
 </style>
-<p class="error">This is my teacher landing page template</p>
 <body>
   <div class="wrapper-logos">
     <a class="center" target="_blank" href="https://www.marshall.edu/">
@@ -194,17 +192,20 @@ a.button-prior {
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
     </a>
   </div>
-  <div class="wrapper-menu">
-    <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a>
-    <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
-    <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
-  </div>
+<!--   <div class="wrapper-menu"> -->
+<!--     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a> -->
+<!--     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a> -->
+<!--     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
+<!--   </div> -->
   <div class="wrapper-teacher-links">
     <a class="button-prior" href="http://localhost/GenCyber/teacher_profile_management.php">Profile Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/teacher_project_management.php">Project Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div></div>
+    <div style="margin:0">
+      <p><?php printf("Welcome, <span class=error>".$_SESSION['user_name']);?></p>
+	  <p class="error">This is my teacher landing page template</p>
+    </div>
     <div>Project Information will go here</div>
     <div>
       <p>

@@ -159,7 +159,6 @@ a.button-prior {
 .wrapper-main {
   display: grid;
   grid-template-columns: repeat(3, [col-start] 1fr);
-  grid-template-rows: 20% 80%;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -216,14 +215,14 @@ a.button-prior {
     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
   </div>
   <div style="min-height:65vh" class="wrapper-main">
-    <div style="margin:0" >
+    <div style="margin:0">
       <p><?php if(isset($_SESSION['user_name'])) { printf("Welcome, <span class=error>".$_SESSION['user_name']); } else { printf("Welcome. Please log in");}?></p><br>
-      <?php echo "valid login creds: ". "<br>". "admin@admin.com, admin". "<br>"."user@email.com, password"?>
+      <?php echo "valid login creds: ". "<br>". "[Admin] admin@admin.com, admin". "<br>"."[Teacher] teach@email.com, teach". "<br>". "[Judge] judge@email.com, judge"?>
     </div>
     <div>
       <p>
         Marshall University's GenCyber program provides summer cybersecurity & cyber forensics camp experiences for both students <br> and teachers at the K-12 level. <br>
-        The goals of the program are to increase interest in cybersecurity careers and diversity in the cybersecurity workforce of the nation, <br> help all students 
+        <br>The goals of the program are to increase interest in cybersecurity careers and diversity in the cybersecurity workforce of the nation, <br> help all students 
         understand correct and safe online behavior and how they can be good digital citizens, and improve teaching methods for the delivery of cybersecurity content in K-12 curricula. <br>
         <br>If you are interested in joining, please click <a href="http://localhost/GenCyber/register.php">here</a>
       </p>
@@ -231,10 +230,9 @@ a.button-prior {
     <div style="font-size:1.0em; margin:0">
       <p>To Do List:<br>
         1. Fix errors on login form to prevent $login_error from always showing up<br>
-        2. Implement logout function <br>
-        3. Change login button to logout when user is logged in <br>
-        4. Implement different landing pages using $_SESSION['user_role'?] <br>
-        5. Finalize layout for content area <br>
+        2. Find out if we need logout from this page <br>
+        2a. if yes, change login to logout when user is logged in <br>
+        3. Finalize layout for content area <br>
       </p>
     </div>
   </div>

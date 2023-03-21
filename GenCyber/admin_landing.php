@@ -167,7 +167,6 @@ a.button-prior {
 .wrapper-main {
   display: grid;
   grid-template-columns: repeat(3, [col-start] 1fr);
-  grid-template-rows: 20% 80%;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -183,8 +182,12 @@ a.button-prior {
   padding-bottom: 3px;
 }
 </style>
-<p class="error">This is my admin landing page template</p>
 <body>
+  <header>
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+      <button class="button-general" type="submit" name="logout">Log Out</button>
+    </form>
+  </header>
   <div class="wrapper-logos">
     <a class="center" target="_blank" href="https://www.marshall.edu/">
       <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
@@ -196,11 +199,11 @@ a.button-prior {
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
     </a>
   </div>
-  <div class="wrapper-menu">
-    <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a>
-    <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
-    <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
-  </div>
+<!--   <div class="wrapper-menu"> -->
+<!--     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a> -->
+<!--     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a> -->
+<!--     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
+<!--   </div> -->
   <div class="wrapper-admin-links">
     <a class="button-prior" href="http://localhost/GenCyber/teacher_management.php">Teacher Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/judge_management.php">Judge Management</a>
@@ -208,7 +211,10 @@ a.button-prior {
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div></div>
+    <div style="margin:0">
+      <p><?php printf("Welcome, <span class=error>".$_SESSION['user_name']);?></p>
+      <p class="error">This is my admin landing page template</p>
+    </div>
     <div>Not sure if this page needs anything else besides links provided</div>
     <div>
       <p>
@@ -229,7 +235,6 @@ a.button-prior {
 <!--     <a href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
 <!--     <a href="http://localhost/GenCyber/help/help.php">Help</a> -->
   </div>
- 
 </body>
 </html>
 

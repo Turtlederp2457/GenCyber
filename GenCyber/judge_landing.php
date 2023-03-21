@@ -165,7 +165,6 @@ a.button-prior {
 .wrapper-main {
   display: grid;
   grid-template-columns: repeat(3, [col-start] 1fr);
-  grid-template-rows: 20% 80%;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -181,7 +180,6 @@ a.button-prior {
   padding-bottom: 3px;
 }
 </style>
-<p class="error">This is my judge landing page template</p>
 <body>
   <div class="wrapper-logos">
     <a class="center" target="_blank" href="https://www.marshall.edu/">
@@ -204,7 +202,10 @@ a.button-prior {
     <a class="button-prior" href="http://localhost/GenCyber/project_evaluation.php">Project Evaluation</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div></div>
+    <div style="margin:0">
+      <p><?php printf("Welcome, <span class=error>".$_SESSION['user_name']);?></p>
+      <p class="error">This is my judge landing page template</p>
+    </div>
     <div>display list of projects with information as default once assigned</div>
     <div>
       <p>
