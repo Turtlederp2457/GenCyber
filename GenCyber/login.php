@@ -37,8 +37,7 @@ if (isset($_POST['login'])) {
   	} else {
   		$user_password = $_POST['user_password'];
   	}
-  	
-  	//might need to select user_role as well to send to different landing page 
+  
   	if (empty($email_error) && empty($password_error)){
       $login_query = "SELECT user_name, user_email, user_password, user_role
       				  FROM `users_tbl` 

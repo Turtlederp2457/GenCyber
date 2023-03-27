@@ -1,5 +1,8 @@
 <?php 
 include "login.php";
+if(isset($_POST['logout'])){
+	include "logout.php";
+}
 session_start();
 ?>
 <!doctype html>
@@ -36,7 +39,7 @@ header {
 form {
   display: grid;
   margin-bottom: 0;
-  grid-template-columns: repeat(4, [col-start] 1fr);
+  grid-template-columns: 25% 50% 25%;
 }
 
 form p, div, span, label {
@@ -181,8 +184,14 @@ a.button-prior {
   padding-bottom: 3px;
 }
 </style>
-<p class="error">This is my judge->profile mgmt page template</p>
 <body>
+  <header>
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+      <button class="button-general" type="submit" name="logout">Log Out</button>
+      <div></div>
+      <p><?php printf("Welcome, ".$_SESSION['user_name']);?></p>
+    </form>
+  </header>
   <div class="wrapper-logos">
     <a class="center" target="_blank" href="https://www.marshall.edu/">
       <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
@@ -194,17 +203,19 @@ a.button-prior {
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
     </a>
   </div>
-  <div class="wrapper-menu">
-    <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a>
-    <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
-    <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
-  </div>
+<!--   <div class="wrapper-menu"> -->
+<!--     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a> -->
+<!--     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a> -->
+<!--     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
+<!--   </div> -->
   <div class="wrapper-judge-links">
     <a class="button-prior" href="http://localhost/GenCyber/judge_profile_management.php">Profile Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/project_evaluation.php">Project Evaluation</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div></div>
+	<div style="margin:0">
+		<p class="error">This is my judge->profile mgmt page template</p>
+    </div>
     <div>display list of projects with information as default once assigned</div>
     <div>
       <p>

@@ -216,7 +216,7 @@ a.button-prior {
   </div>
   <div style="min-height:65vh" class="wrapper-main">
     <div style="margin:0">
-      <p><?php if(isset($_SESSION['user_name'])) { printf("Welcome, <span class=error>".$_SESSION['user_name']); } else { printf("Welcome. Please log in");}?></p><br>
+      <!-- <p><?php if(isset($_SESSION['user_name'])) { printf("Welcome, <span class=error>".$_SESSION['user_name']); } else { printf("Welcome. Please log in");}?></p><br> -->
       <?php echo "valid login creds: ". "<br>". "[Admin] admin@admin.com, admin". "<br>"."[Teacher] teach@email.com, teach". "<br>". "[Judge] judge@email.com, judge"?>
     </div>
     <div>
@@ -230,9 +230,7 @@ a.button-prior {
     <div style="font-size:1.0em; margin:0">
       <p>To Do List:<br>
         1. Fix errors on login form to prevent $login_error from always showing up<br>
-        2. Find out if we need logout from this page <br>
-        2a. if yes, change login to logout when user is logged in <br>
-        3. Finalize layout for content area <br>
+        2. Finalize layout for content area <br>
       </p>
     </div>
   </div>

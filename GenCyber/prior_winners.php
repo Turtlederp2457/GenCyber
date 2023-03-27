@@ -215,10 +215,13 @@ a.button-prior {
     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
   </div>
-  <div class="wrapper-main">
-    <div><p><?php if(isset($_SESSION['user_name'])) { printf("Welcome, <span class=error>".$_SESSION['user_name']); } else { printf("Welcome, please log in");}?></p></div>
+  <div style="min-height:65vh" class="wrapper-main">
+    <div style="margin:0">
+      <!-- <p><?php if(isset($_SESSION['user_name'])) { printf("Welcome, <span class=error>".$_SESSION['user_name']); } else { printf("Welcome. Please log in");}?></p><br> -->
+      <?php echo "valid login creds: ". "<br>". "[Admin] admin@admin.com, admin". "<br>"."[Teacher] teach@email.com, teach". "<br>". "[Judge] judge@email.com, judge"?>
+    </div>
     <div>main content here</div>
-    <div>
+    <div style="font-size:1.0em; margin:0">
       <p>
         To Do List:<br>
         1. Begin adding winners to page <br>

@@ -1,5 +1,8 @@
 <?php 
 include "login.php";
+if(isset($_POST['logout'])){
+	include "logout.php";
+}
 session_start();
 ?>
 <!doctype html>
@@ -36,7 +39,7 @@ header {
 form {
   display: grid;
   margin-bottom: 0;
-  grid-template-columns: repeat(4, [col-start] 1fr);
+  grid-template-columns: 25% 50% 25%;
 }
 
 form p, div, span, label {
@@ -181,9 +184,19 @@ a.button-prior {
   font-size: 1.2em;
   padding-bottom: 3px;
 }
-</style>
 
+table, th, td {
+  border: 1px solid;
+}
+</style>
 <body>
+  <header>
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+      <button class="button-general" type="submit" name="logout">Log Out</button>
+      <div></div>
+      <p><?php printf("Welcome, ".$_SESSION['user_name']);?></p>
+    </form>
+  </header>
   <div class="wrapper-logos">
     <a class="center" target="_blank" href="https://www.marshall.edu/">
       <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
@@ -208,10 +221,20 @@ a.button-prior {
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
     <div style="margin:0">
-      <p><?php printf("Welcome, <span class=error>".$_SESSION['user_name']);?></p>
       <p class="error">This is my admin->teacher mgmt page template</p>
     </div>
-    <div></div>
+    <table>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>User Email</th>
+        <th>School Name</th>
+        <th>School Address</th>
+        <th>School City</th>
+        <th>School Name</th>
+        <th>School Role</th>
+      </tr>
+    </table>
     <div>
       <p>
         To Do List:<br>

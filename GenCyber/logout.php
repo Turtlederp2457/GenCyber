@@ -13,6 +13,7 @@ session_start();
 // Clear destroy the session
 
 if(@$_SESSION["user_name"]){
+	
 
 	$_SESSION["user_name"] = false;
 

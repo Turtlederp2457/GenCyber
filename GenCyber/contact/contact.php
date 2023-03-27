@@ -216,7 +216,7 @@ a.button-prior {
     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
   </div>
-  <div class="wrapper-main">
+  <div style="min-height:65vh" class="wrapper-main">
     <div></div>
     <p class="center" style="font-size:1.5em"><span style="text-decoration:underline;text-decoration-color:green">GenCyber Camps</span><br>
       Marshall University<br>
