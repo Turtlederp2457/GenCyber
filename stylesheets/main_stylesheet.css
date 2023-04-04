@@ -1,0 +1,222 @@
+* { 
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
+}
+
+body {
+  min-height: 100vh;
+}
+
+.wrapper-header {
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+  grid-template-rows: 20% 80%;
+  background-image: linear-gradient(to right, rgba(0, 102, 0, 0.6), rgba(0, 0, 102, 0.6)),
+    url("http://localhost/GenCyber/imgs/GettyImages-cyber.jpg");
+/*   in case image doesnt load */
+  background-color: black;
+}
+
+.button-general {
+  border: 1px solid rgb(51, 153, 255);
+  background-color: rgb(51, 153, 255);
+  font: caption;
+  font-size: 1.2em;
+  color: white;
+  margin: 10px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+
+a.button-login:hover,
+a.button-signup:hover {
+  background-color: #F0F0F0;
+  border: 1px solid #F0F0F0;
+  color: green;
+  text-decoration: underline;
+  text-decoration-color: green;
+  text-decoration-thickness: 2px;
+  position: relative;
+}
+
+.button-login {
+  grid-column: 1;
+  grid-row: 1;
+  
+}
+
+.button-signup {
+  grid-column: 3;
+}
+
+.marshall-logo {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.gencyber-logo {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.better-header {
+  text-decoration: none;
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 3.5em;
+/*   -webkit-text-stroke-width:1px; */
+/*   -webkit-text-stroke-color:black; */
+}
+
+.wrapper-main {
+  display: grid;
+  grid-template-columns: repeat(3, [col-start] 1fr);
+  grid-template-rows: 20% 80%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.button-prior {
+  background-color: white;
+  border: none;
+  color: black;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding-bottom: 5px;
+  text-align: center;
+  width: 100%;
+}
+
+.button-prior:hover {
+  background-color: #F0F0F0;
+  text-decoration: underline;
+  text-decoration-color: green;
+  text-decoration-thickness: 2px;
+  position: relative;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  grid-column: col-start 2 / col-start 2;
+  grid-row: 1;
+}
+
+.dropdown-content {
+  display: none;
+  background-color: white;
+  position: absolute;
+  width: 100%;
+  cursor: pointer;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  position: relative;
+  border: none;
+  padding: 2px;
+  font-size: 1em;
+}
+
+.dropdown-content:hover {
+  background-color: #F0F0F0;
+  text-decoration: underline;
+  text-decoration-color: green;
+  text-decoration-thickness: 2px;
+  position: relative;
+}
+
+.main-background-left {
+  grid-column: 1;
+  grid-row: 2;
+  color: black;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.main-background-right {
+  grid-column: 3;
+  grid-row: 2;
+  color: black;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.photo-container {
+  border-style: solid;
+  border-width: 30px;
+  border-image: radial-gradient(black, green, black) 1;
+  grid-column: col-start 2 / col-start 2;
+}
+
+.photo {
+  grid-column: col-start 2 / col-start 2;
+  grid-row: 2;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay {
+  display: none;
+}
+
+.photo:hover + .overlay {
+  display: inline-block;
+  font-size: 1em;
+  color: white;
+  text-align: center;
+}
+
+.wrapper-footer {
+  border: 1px solid green;
+  background-color: #F0F0F0;
+  display: grid;
+  grid-template-columns: repeat(3, [col-start] 1fr);
+  margin: auto;
+  text-align: center;
+  font-size: 1.2em;
+  padding-bottom: 3px;
+}
+
+.center {
+  margin: auto;
+}
+
+.scale-down {
+  object-fit: scale-down;
+}
+
+.fill {
+  object-fit: fill;
+}
+
+.contain {
+  object-fit: contain;
+}
+
+.arrow {
+  width: 0.5em;
+  height: 0.5em;
+  display: inline-block;
+  vertical-align: middle;
+  border-left: 0.15em solid currentColor;
+  border-bottom: 0.15em solid currentColor;
+  transform: rotate(-45deg);
+  margin-left: 0.38em;
+  margin-top: -0.25em;
+}
+
+.notes{
+  background-color:red;
+  font-size:20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  overflow: hidden;
+}
+
+a:visited {
+  color: initial;
+  text-decoration-color: green;
+}

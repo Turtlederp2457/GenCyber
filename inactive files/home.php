@@ -1,0 +1,66 @@
+<?php 
+include "login.php";
+?>
+<!doctype html>
+<html lang="en-us" class="scroll-smooth"/>
+<head>
+<!-- Required meta tags --> 
+<meta charset = "utf-8"/>
+<meta name="sitePath" content="http://localhost/GenCyber/home.php" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+<!-- Add your name here one you have helped write this code -->
+<meta name="author" content="Gatlin Zornes">
+<title>Home - Marshall University GenCyber</title>
+<link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/main_stylesheet.css" /> 
+<!-- Might need this -->
+<!-- <base href="http://localhost/GenCyber/" target="_self"> -->
+
+<body>
+  <div class="wrapper-header">
+      <a class="button-general button-login" href="http://localhost/GenCyber/login.php">Log In</a>
+      <a style="color:white" class="better-header center" href="http://localhost/GenCyber/home.php">Marshall University GenCyber</a>
+      <a class="button-general button-signup" href="http://localhost/GenCyber/register.php">Register</a>
+      <a class="center" target="_blank" href="https://www.marshall.edu/">
+        <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
+          style="height:100px;width:120px" alt="Marshall University logo" class="marshall-logo"/>
+      </a>
+      <a class="center" target="_blank" href="https://www.gen-cyber.com/">
+        <img src="https://www.gen-cyber.com/static/gencyber_public_web/img/gencyber-logo-small.png" 
+          style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
+      </a>
+  </div>
+  <div class="wrapper-main">
+    <div class="dropdown">
+      <button class="button-prior">Prior Competition Winners
+         <span class="arrow"></span>   
+        <button class="dropdown-content">Winner 1</button>
+        <button class="dropdown-content">Winner 2</button>
+        <button class="dropdown-content">Winner 3</button>
+      </button>
+    </div>
+    <div class="main-background-left center"><p>Marshall University's GenCyber program provides summer 
+      cybersecurity & cyber forensics camp experiences for both students and teachers at the K-12 level. 
+      The goals of the program are to increase interest in cybersecurity careers and diversity in the
+      cybersecurity workforce of the nation, help all students understand correct and safe online behavior
+      and how they can be good digital citizens, and improve teaching methods for the delivery of 
+      cybersecurity content in K-12 curricula.</p></div>
+    <div class="photo-container">
+      <img class="photo" src="http://localhost/GenCyber/imgs/placeholder.jpg" alt="placeholder"/>          
+	    <div class="overlay">Click image to learn more about this project</div>
+    </div>
+    <div class="main-background-right center"><p>Our vision is for the GenCyber program to be part 
+      of the solution to the Nation's shortfall of skilled cybersecurity & digital forensics 
+      professionals. Ensuring that enough young people are inspired to direct their talents in this 
+      area is critical to the future of our country's national and economic security as we become 
+      even more reliant on cyber-based technology in every aspect of our daily lives.</p>
+    </div>
+  </div>
+  <div class="wrapper-footer">
+    <a href="http://localhost/GenCyber/about/about.php">About</a>
+    <a href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
+    <a href="http://localhost/GenCyber/help/help.php">Help</a>
+  </div>
+  <p class="notes">Note: Still working on proper screen height and text resizing</p>
+</body>
+</html>
+
