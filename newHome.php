@@ -217,7 +217,7 @@ a.button-prior {
   <div style="min-height:65vh" class="wrapper-main">
     <div style="margin:0">
       <!-- <p><?php if(isset($_SESSION['user_name'])) { printf("Welcome, <span class=error>".$_SESSION['user_name']); } else { printf("Welcome. Please log in");}?></p><br> -->
-      <?php echo "valid login creds: ". "<br>". "[Admin] admin@admin.com, admin". "<br>"."[Teacher] teach@email.com, teach". "<br>". "[Judge] judge@email.com, judge"?>
+      <?php echo "valid login creds: ". "<br>". "[Admin] Admin@Admin.com, Admin". "<br>"."[Teacher] Teacher@Teacher.com, Teacher". "<br>". "[Judge] Judge@Judge.com, Judge"?>
     </div>
     <div>
       <p>

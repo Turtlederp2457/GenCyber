@@ -39,20 +39,17 @@ if (isset($_POST['login'])) {
   	}
   
   	if (empty($email_error) && empty($password_error)){
-      $login_query = "SELECT user_name, user_email, user_password, user_role
-      				  FROM `users_tbl` 
-      				  WHERE (user_email=? && user_password=?)";
+      $login_query = "call LoginCheck(?,?)";
       $stmt = mysqli_prepare($connection, $login_query);
       $stmt->bind_param("ss", $login_user_email, $user_password);
       $stmt->execute();
-      $stmt->bind_result($user_name, $login_user_email, $user_password, $user_role);
+      $stmt->bind_result($login_user_email, $user_password, $user_role);
       $result = $stmt->fetch();
       $stmt->close();
       if (!$result){
       	$login_error = "No valid user found. Please try again.";
       } else {
       	session_start();
-      	$_SESSION['user_name'] = $user_name;
       	$_SESSION['user_role'] = $user_role;
       	switch ($_SESSION['user_role']) {
       	  case 'A': 
