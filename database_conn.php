@@ -30,6 +30,6 @@ class database_conn {
     }
     
 }
-$connection = new mysqli("localhost", "root", "", "gen_cyber");
+$connection = new mysqli("gencyberdb.cdiwydtvxuek.us-east-2.rds.amazonaws.com", "admin", "GenCyber123", "gencyberdb");
 // $connection->connection("localhost", "root", "", "gen_cyber");
 ?>
