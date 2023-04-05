@@ -4,6 +4,7 @@ if(isset($_POST['logout'])){
 	include "logout.php";
 }
 session_start();
+require_once("database_conn.php");
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -220,21 +221,16 @@ table, th, td {
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div style="margin:0">
-      <p class="error">This is my admin->teacher mgmt page template</p>
+    <div>
+    <h2>Teacher Applications</h2>
+    <?php
+    $stmt = mysqli_query($connection,"call AllTeacherApplications();");
+    while ($row = mysqli_fetch_row($stmt)) {
+        echo $row[0];
+    }
+    $stmt->close();
+    ?>
     </div>
-    <table>
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>User Email</th>
-        <th>School Name</th>
-        <th>School Address</th>
-        <th>School City</th>
-        <th>School Name</th>
-        <th>School Role</th>
-      </tr>
-    </table>
     <div>
       <p>
         To Do List:<br>

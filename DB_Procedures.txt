@@ -1,1 +1,3 @@
 LoginCheck(Email, Passoword) returns (Email, Password, user_role)
+
+AllTeacherApplications() returns a list of all teacher applications
