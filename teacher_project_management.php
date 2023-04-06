@@ -188,7 +188,7 @@ a.button-prior {
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['user_name']);?></p>
+      <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
     </form>
   </header>
   <div class="wrapper-logos">
@@ -214,8 +214,11 @@ a.button-prior {
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
     <div style="margin:0">
 	  <p class="error">This is my teacher->project mgmt page template</p>
+	  <button class="button-prior">Add New Project</button>
     </div>
-    <div>display all projects here</div>
+    <div>
+	  <h2>Your Projects</h2>
+	</div>
     <div>
       <p>
         To Do List:<br>

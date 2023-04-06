@@ -188,7 +188,7 @@ a.button-prior {
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['user_name']);?></p>
+      <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
     </form>
   </header>
   <div class="wrapper-logos">

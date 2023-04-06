@@ -1,7 +1,7 @@
 <?php
 $login_user_email = "";
 $user_password = "";
-$user_name = "";
+$first_name = "";
 $user_role = "";
 
 $login_email_error = "";
@@ -51,6 +51,7 @@ if (isset($_POST['login'])) {
       } else {
       	session_start();
       	$_SESSION['user_role'] = $user_role;
+      	$_SESSION['first_name'] = $first_name;
       	switch ($_SESSION['user_role']) {
       	  case 'A': 
       	    header('location: admin_landing.php');

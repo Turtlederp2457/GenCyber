@@ -11,7 +11,7 @@ require_once("database_conn.php");
 <head>
 <!-- Required meta tags --> 
 <meta charset = "utf-8"/>
-<meta name="sitePath" content="http://localhost/GenCyber/admin_landing.php" />
+<meta name="sitePath" content="http://localhost/GenCyber/teacher_management.php" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
 <!-- Add your name here one you have helped write this code -->
 <meta name="author" content="Gatlin Zornes">
@@ -195,7 +195,7 @@ table, th, td {
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['user_name']);?></p>
+      <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
     </form>
   </header>
   <div class="wrapper-logos">
@@ -222,23 +222,29 @@ table, th, td {
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
     <div>
-    <h2>Teacher Applications</h2>
-    <?php
-    $stmt = mysqli_query($connection,"call AllTeacherApplications();");
-    while ($row = mysqli_fetch_row($stmt)) {
-        echo $row[0];
-    }
-    $stmt->close();
-    ?>
+      <h2>Teacher Applications</h2>
+        <?php
+          $stmt = mysqli_query($connection,"call AllTeacherApplications();");
+            while ($row = mysqli_fetch_row($stmt)) {
+              echo $row[0];
+            }
+          $stmt->close();
+       ?>
     </div>
     <div>
-      <p>
+      <h2>Active Teachers</h2>
+    </div>
+    <div>
+      <h2>Inactive Teachers	</h2>
+    </div>
+  </div>
+  <div>
+    <p>
         To Do List:<br>
         1. Show the list of new applications awaiting approval with "approval" and "disapproval" buttons <br>
         2. Show the list of active teachers with "inactivate" button. <br>
         3. Show the list of old/inactive teachers with "activate" button<br>
       </p>
-    </div>
   </div>
   <div class="wrapper-footer">
     <div>Date Created</div>

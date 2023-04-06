@@ -189,7 +189,7 @@ a.button-prior {
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['user_name']);?></p>
+      <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
     </form>
   </header>
   <div class="wrapper-logos">
@@ -220,10 +220,9 @@ a.button-prior {
     <div>
       <p>
         To Do List:<br>
-        1. Display projects & info<br>
-		2. Project Evaluation page will display two list of project: <br>
-		  (1) a list of active projects which was not evaluated yet with download button and evaluation button to put scores and comments for different criteria. <br>
-		  (2) a list of evaluated project which was already evaluated but can be edited. <br>
+        1. Profile Management page will allow Teacher/Judge users to change password, profile information, etc) <br>
+        2. create form to handle new information and errors <br>
+        3. alter old information on submit<br>
       </p>
     </div>
   </div>

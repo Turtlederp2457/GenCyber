@@ -190,7 +190,7 @@ a.button-prior {
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['user_name']);?></p>
+      <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
     </form>
   </header>
   <div class="wrapper-logos">
@@ -204,11 +204,6 @@ a.button-prior {
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
     </a>
   </div>
-<!--   <div class="wrapper-menu"> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
-<!--   </div> -->
   <div class="wrapper-admin-links">
     <a class="button-prior" href="http://localhost/GenCyber/teacher_management.php">Teacher Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/judge_management.php">Judge Management</a>

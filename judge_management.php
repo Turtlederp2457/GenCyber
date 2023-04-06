@@ -191,7 +191,7 @@ a.button-prior {
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['user_name']);?></p>
+      <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
     </form>
   </header>
   <div class="wrapper-logos">
@@ -219,17 +219,23 @@ a.button-prior {
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
     <div style="margin:0">
       <p class="error">This is my admin->judge_mgmt page template</p>
+      <button style="height:10%" type="submit" name="create_judge">Create New Judge</button>
     </div>
-    <div></div>
     <div>
-      <p>
+      <h2>Active Judges</h2>
+    </div>
+    <div>
+      <h2>Inactive Judges</h2>
+    </div>
+  </div>
+  <div>
+    <p>
         To Do List:<br>
         1. Create new Judges (button). At the click of the button, a web form will Judge's name, email, phone, company name. and the role will be displayed to enter the information. <br>
 		2. Show the list of current active Judges with "inactivate" button <br>
 		3. Show the list of Archive old/inactive Judges with "activate" button <br>
 		4. Assign Judges to project(s) <br>
       </p>
-    </div>
   </div>
   <div class="wrapper-footer">
     <div>Date Created</div>

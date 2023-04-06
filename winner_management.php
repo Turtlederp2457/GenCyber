@@ -190,7 +190,7 @@ a.button-prior {
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['user_name']);?></p>
+    <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
     </form>
   </header>
   <div class="wrapper-logos">
@@ -219,7 +219,9 @@ a.button-prior {
     <div style="margin:0">
       <p class="error">This is my admin->winner_mgmt page template</p>
     </div>
-    <div></div>
+    <div>
+      <h2>All Projects</h2>
+    </div>
     <div>
       <p>
         To Do List:<br>
