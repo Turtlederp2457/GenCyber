@@ -223,19 +223,36 @@ table, th, td {
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
     <div>
       <h2>Teacher Applications</h2>
-        <?php
-          $stmt = mysqli_query($connection,"call AllTeacherApplications();");
-            while ($row = mysqli_fetch_row($stmt)) {
-              echo $row[0];
-            }
-          $stmt->close();
-       ?>
+      <table>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>User Email</th>
+          <th>School Name</th>
+          <th>School State</th>
+          <th>School Role</th>
+          <th>Approve</th>
+          <th>Deny</th>
+        </tr>
+          <?php
+            $stmt = mysqli_query($connection,"call AllTeacherApplications();");
+              while ($row = mysqli_fetch_assoc($stmt)) {
+                echo "<tr>";
+                foreach ($row as $field => $value) { 
+                	echo "<td>" . $value . "</td>";
+                }
+                echo "<td><button>Approve</button></td>";
+          		echo "<td><button>Deny</button></td>";
+                echo "</tr>";
+              }
+          ?>
+      </table>   
     </div>
     <div>
       <h2>Active Teachers</h2>
     </div>
     <div>
-      <h2>Inactive Teachers	</h2>
+      <h2>Inactive Teachers</h2>
     </div>
   </div>
   <div>

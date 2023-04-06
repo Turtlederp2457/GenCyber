@@ -68,7 +68,7 @@ if(isset($_POST['register'])){
     } elseif (!filter_var(test_input($_POST['user_email']), FILTER_VALIDATE_EMAIL)) {
         $user_email_error = "Check to make sure email is correct";
     } else {  //check email uniqueness here
-    	$email_query = "SELECT user_email FROM register_tbl WHERE user_email = ?";
+    	$email_query = "SELECT user_email FROM Teacher_applications WHERE user_email = ?";
     	if ($stmt = mysqli_prepare($connection, $email_query)){
     	  mysqli_stmt_bind_param($stmt, "s", $param_user_email);
     	  $param_user_email = test_input($_POST['user_email']);
@@ -139,6 +139,12 @@ if(isset($_POST['register'])){
     	$school_city = test_input($_POST['school_city']);
     }
     
+    if ($_POST['school_state'] == "") {
+      $school_state_error = "School state cannot be empty";
+    } else {
+    	$school_state = ($_POST['school_state']);
+    }
+    
     if (empty(test_input($_POST['school_role']))) {
       $school_role_error = "School role cannot be empty";
     } elseif (!preg_match("/^[a-zA-Z ]*$/", test_input($_POST['school_role']))) {
@@ -151,7 +157,7 @@ if(isset($_POST['register'])){
     		empty($school_name_error) && empty($school_address_error) && 
     		empty($school_city_error) && empty($school_state_error) && empty($school_role_error)){
     	// We need to check if the account with that username exists.
-        if ($stmt = $connection->prepare('SELECT user_email FROM register_tbl WHERE user_email = ?')) {
+        if ($stmt = $connection->prepare('SELECT user_email FROM Teacher_applications WHERE user_email = ?')) {
 	    // Bind parameters (s = string, i = int, b = blob, etc), hash the password using the PHP password_hash function.
 	    $stmt->bind_param('s', $_POST['user_email']);
 	    $stmt->execute();
@@ -162,7 +168,7 @@ if(isset($_POST['register'])){
 		  echo 'Account already exists, please try logging in';
 	    } else {
 		  // Username doesn't exists, insert new account
-	      if ($stmt = $connection->prepare('INSERT INTO register_tbl (first_name, last_name, user_email, school_name, school_address, school_city, school_state, school_role)'.
+	      if ($stmt = $connection->prepare('INSERT INTO Teacher_applications (first_name, last_name, user_email, school_name, school_address, school_city, school_state, school_role)'.
 	      		'VALUES (?, ?, ?, ?, ?, ?, ?, ?)')) {
           // We do not want to expose passwords in our database, so hash the password and use password_verify when a user logs in.
 	      	$stmt->bind_param('ssssssss', $first_name, $last_name, $user_email, $school_name, $school_address, $school_city, $school_state, $school_role);
@@ -471,7 +477,7 @@ a.button-prior {
       <div>
         <p>
           <label for="">School State</label>
-          <select id="select-state" placeholder="Pick a state...">
+          <select name="school_state" placeholder="Pick a state...">
             <option value="">Select a state...</option>
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
@@ -527,6 +533,9 @@ a.button-prior {
           </select>
         </p>
       </div>
+       <div>
+        <span class="error"><?php echo $school_state_error;?></span>
+      </div>
       <div>
         <p>
           <label for="">Role at School</label>
@@ -544,9 +553,7 @@ a.button-prior {
    </div>
    <div style="font-size:1.0em">
       <p>To Do List:<br>
-        1. Finalize layout (to include errors)<br>
-        2. Update to new database <br>
-        3. Add reCaptcha <br>
+        1. Add reCaptcha <br>
       </p>
     </div>
   <div class="wrapper-footer">
