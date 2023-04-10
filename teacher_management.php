@@ -31,16 +31,23 @@ function create_applications_table($connection){
   $stmt->close();
 }
 
-//here we will transfer registration data from Teacher_applications	-> users_tbl   
+/* Here we will transfer registration data from Teacher_applications -> users_tbl
+ * Then we will remove the associated row from Teacher_applications
+ */
+
 if (isset($_POST['approve'])){
   $user_email = $_POST['approve'];
-  /* This query works to transfer data
-   * Needs to be updated to delete/remove data from Teacher_applications after transfer
-   */
+  //our query to transfer the data
   $approval_query = "INSERT INTO users_tbl (First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name) ".
     "SELECT First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name ".
     "FROM Teacher_applications WHERE user_email=? ";
   $stmt = mysqli_prepare($connection, $approval_query);
+  $stmt->bind_param("s", $user_email);
+  $stmt->execute();
+  $stmt->close();
+  //our query to remove the associated user from Teacher_applications
+  $remove_query = "DELETE FROM Teacher_applications WHERE user_email=? ";
+  $stmt = mysqli_prepare($connection, $remove_query);
   $stmt->bind_param("s", $user_email);
   $stmt->execute();
   $stmt->close();
@@ -285,8 +292,8 @@ table, th, td {
           <tr><?php 
           foreach($row as $key => $field)
           	echo '<td>' . htmlspecialchars($field) . '</td>';?>
-            <td><button type="submit" name="approve" value="<?=$row['user_email']?>">Approve</button></td>
-            <td><button type="submit" name="deny" value="<?=$row['user_email']?>">deny</button></td>
+            <td><button style="all:revert; background-color:green" type="submit" name="approve" value="<?=$row['user_email']?>">Approve</button></td>
+            <td><button style="all:revert; background-color:red" type="submit" name="deny" value="<?=$row['user_email']?>">Deny</button></td>
           </tr>
           <?php }?>
       </table> 
@@ -302,7 +309,7 @@ table, th, td {
   <div>
     <p>
         To Do List:<br>
-        1. Show the list of new applications awaiting approval with "approval" and "disapproval" buttons <br>
+        1. Need to update DB to hold Active Status <br>
         2. Show the list of active teachers with "inactivate" button. <br>
         3. Show the list of old/inactive teachers with "activate" button<br>
       </p>
