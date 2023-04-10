@@ -5,6 +5,50 @@ if(isset($_POST['logout'])){
 }
 session_start();
 require_once("database_conn.php");
+
+//our function to create the table of teacher applications
+//not currently used
+function create_applications_table($connection){ 
+  $stmt = mysqli_query($connection,"call AllTeacherApplications()");
+  $first_row = true;
+  while ($row = mysqli_fetch_assoc($stmt)) {
+    if ($first_row) {
+      $first_row = false;
+      // Output header row from keys.
+      echo '<tr>';
+      foreach($row as $key => $field) {
+        echo '<th>' . htmlspecialchars($key) . '</th>';
+      }
+      echo '<th>Approve</th>';
+      echo '<th>Deny</th>';
+      echo '</tr>';
+    }
+    echo '<tr>';
+    foreach($row as $key => $field) {
+      echo '<td>' . htmlspecialchars($field) . '</td>';
+    }
+  }
+  $stmt->close();
+}
+
+//here we will transfer registration data from Teacher_applications	-> users_tbl   
+if (isset($_POST['approve'])){
+  $user_email = $_POST['approve'];
+  /* This query works to transfer data
+   * Needs to be updated to delete/remove data from Teacher_applications after transfer
+   */
+  $approval_query = "INSERT INTO users_tbl (First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name) ".
+    "SELECT First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name ".
+    "FROM Teacher_applications WHERE user_email=? ";
+  $stmt = mysqli_prepare($connection, $approval_query);
+  $stmt->bind_param("s", $user_email);
+  $stmt->execute();
+  $stmt->close();
+}
+
+if (isset($_POST['deny'])){
+	
+}
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -160,6 +204,7 @@ a.button-prior {
   color: initial;
 }
 
+
 .wrapper-admin-links {
   display: grid;
   grid-template-columns: repeat(4, [col-start] 1fr);
@@ -221,7 +266,7 @@ table, th, td {
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div>
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Teacher Applications</h2>
       <table>
         <tr>
@@ -234,19 +279,18 @@ table, th, td {
           <th>Approve</th>
           <th>Deny</th>
         </tr>
-          <?php
-            $stmt = mysqli_query($connection,"call AllTeacherApplications();");
-              while ($row = mysqli_fetch_assoc($stmt)) {
-                echo "<tr>";
-                foreach ($row as $field => $value) { 
-                	echo "<td>" . $value . "</td>";
-                }
-                echo "<td><button>Approve</button></td>";
-          		echo "<td><button>Deny</button></td>";
-                echo "</tr>";
-              }
-          ?>
-      </table>   
+        <?php
+          $result = mysqli_query($connection,"call AllTeacherApplications()");
+          while($row=mysqli_fetch_assoc($result)){?>
+          <tr><?php 
+          foreach($row as $key => $field)
+          	echo '<td>' . htmlspecialchars($field) . '</td>';?>
+            <td><button type="submit" name="approve" value="<?=$row['user_email']?>">Approve</button></td>
+            <td><button type="submit" name="deny" value="<?=$row['user_email']?>">deny</button></td>
+          </tr>
+          <?php }?>
+      </table> 
+    </form>  
     </div>
     <div>
       <h2>Active Teachers</h2>
@@ -272,7 +316,5 @@ table, th, td {
 <!--     <a href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
 <!--     <a href="http://localhost/GenCyber/help/help.php">Help</a> -->
   </div>
- 
 </body>
 </html>
-
