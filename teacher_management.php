@@ -272,7 +272,7 @@ table, th, td {
     <a class="button-prior" href="http://localhost/GenCyber/admin_project_management.php">Project Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
-  <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
+  <div style="margin-top:10px;font-size:1.0em; min-height:30vh" >
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Teacher Applications</h2>
       <table>
@@ -299,10 +299,10 @@ table, th, td {
       </table> 
     </form>  
     </div>
-    <div>
+    <div style="margin-top:10px;font-size:1.0em; min-height:30vh" >
       <h2>Active Teachers</h2>
     </div>
-    <div>
+    <div style="margin-top:10px;font-size:1.0em; min-height:30vh" >
       <h2>Inactive Teachers</h2>
     </div>
   </div>
@@ -312,6 +312,7 @@ table, th, td {
         1. Need to update DB to hold Active Status <br>
         2. Show the list of active teachers with "inactivate" button. <br>
         3. Show the list of old/inactive teachers with "activate" button<br>
+        4. update CSS for table <br>
       </p>
   </div>
   <div class="wrapper-footer">
