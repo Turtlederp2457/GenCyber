@@ -1,0 +1,136 @@
+<?php
+$user_email = "";
+$user_password = "";
+$user_name = "";
+
+$email_error = "";
+$password_error = "";
+$login_error = "";
+$login_query = "";
+
+function test_input($data) {
+  $data = trim($data);         
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;    
+}
+
+include "database_conn.php";
+session_start();
+//flow will be: 
+//(1)check if empty, 
+//(2)if not empty, ensure correct email format
+//(3)if not empty AND correct format, query database for entered email
+//(4)fetch password and compare to input
+if (isset($_POST['login'])) {
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  	if (empty($_POST['user_email'])) {
+      $email_error = "Email cannot be empty";
+  	} elseif (!filter_var($_POST['user_email'], FILTER_VALIDATE_EMAIL)) {
+        $email_error = "Check to make sure email format is correct";
+  	} else {
+  		$user_email = $_POST['user_email'];
+  	}
+  	
+  	if (empty($_POST['user_password'])){
+  		$password_error = "Password cannot be empty";
+  	} else {
+  		$user_password = $_POST['user_password'];
+  	}
+  	
+  	if (empty($email_error) && empty($password_error)){
+      $login_query = "SELECT user_name, user_email, user_password
+      				  FROM `users_tbl` 
+      				  WHERE (user_email=? && user_password=?)";
+      $stmt = mysqli_prepare($connection, $login_query);
+      $stmt->bind_param("ss", $user_email, $user_password);
+      $stmt->execute();
+      $stmt->bind_result($user_name, $user_email, $user_password);
+      $result = $stmt->fetch();
+      $stmt->close();
+      if (!$result){
+      	$login_error = "Email combination not valid. Please try again.";
+      } else {
+      	$_SESSION['user_name'] = $user_name;
+      	header('location: home.php');
+
+      }
+    }
+  }  
+}
+?>
+<!doctype html>
+<html lang="en-us" class="scroll-smooth"/>
+<head>
+<!-- Required meta tags --> 
+<meta charset = "utf-8"/>
+<meta name="sitePath" content="http://localhost/GenCyber/home.php" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+<!-- Add your name here one you have helped write this code -->
+<meta name="author" content="Gatlin Zornes">
+<title>Login - Marshall University GenCyber</title>
+<link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/main_stylesheet.css" />
+<link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/login_stylesheet.css" />
+<!-- Might need this -->
+<!-- <base href="http://localhost/GenCyber/" target="_self"> -->
+<body>
+<?php ?>
+  <div class="wrapper-header">
+      <a class="button-general button-login" href="http://localhost/GenCyber/login.php">Log In</a>
+      <a style="color:white" class="better-header center" href="http://localhost/GenCyber/home.php">Marshall University GenCyber</a>
+      <a class="button-general button-signup" href="http://localhost/GenCyber/register.php">Register</a>
+      <a class="center" target="_blank" href="https://www.marshall.edu/">
+        <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
+          style="height:100px;width:120px" alt="Marshall University logo" class="marshall-logo"/>
+      </a>
+      <a class="center" target="_blank" href="https://www.gen-cyber.com/">
+        <img src="https://www.gen-cyber.com/static/gencyber_public_web/img/gencyber-logo-small.png" 
+          style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
+      </a>
+  </div>
+  <div class="wrapper-login">
+    <div><?php echo "valid login creds: ". "<br>". "admin@admin.com, admin". "<br>"."user@email.com, password"?></div>
+      <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+        <div>
+          <label>Email: 
+            <input type="text" name="user_email" value="<?php echo $user_email;?>">
+          </label>
+        </div>
+        <div>
+          <span class="error"><?php echo $email_error;?></span>
+        </div>
+        <div>  
+          <label>Password:
+            <input type="text" name="user_password" value="<?php echo $user_password;?>">
+          </label>
+        </div>
+        <div>
+          <span class="error"><?php echo $password_error;?></span>
+          <span class="error"><?php echo $login_error;?></span>
+        </div>
+      <div>
+        <input type="submit" value="Log In" name="login">
+        <a class="password-reset" href="http://localhost/GenCyber/reset-password.php">Forgot password?</a>
+      </div>
+    </form>
+  <div style="padding-left:50px">
+    	<p>To Do List:<br>
+    	  1. AFTER input validation, send to page based on user_type<br>
+    	     Currently sends to home page
+    	  <br>
+    	  <br>
+    	  2. ...
+    	  <br>
+    	  <br>
+    	</p>
+    </div>
+  </div>
+</body>
+  <div class="wrapper-footer">
+    <a href="http://localhost/GenCyber/about/about.php">About</a>
+    <a href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
+    <a href="http://localhost/GenCyber/help/help.php">Help</a>
+  </div>
+  <p class="notes">Note: Still working on proper screen height and text resizing</p>
+</body>
+</html>
