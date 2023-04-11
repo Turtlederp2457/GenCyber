@@ -1,0 +1,36 @@
+TO DO 
+x means completed
+    Known Bugs:
+
+    ETC to add:
+        Password field in login page should be censored  [](Layne recomendation)
+
+
+    Implement teacher page (William is boss of this) []
+        Landing page [x]
+        Profile management page []
+            Ability to change password []
+            Ability to change name []
+            Ability to change email []
+        Project management page []
+
+    Implement admin page  (Dakota and Mister Gatlin Zornes are boss of this) []
+        Teacher management page []
+            Teacher applications list [x]
+            Active teacher list []
+            Inactive teacher list []
+        Judge management page []
+        Project management page []
+        Winner management page []
+
+    Implement judge page  (Layne is boss of this) []
+        Profile management page []
+            Ability to change password []
+            Ability to change name []
+            Ability to change email []
+        Project management page []
+
+    Implement homepage  (Gatlin is boss of this) [x]
+        Homepage [x]
+
+    Database [x]
