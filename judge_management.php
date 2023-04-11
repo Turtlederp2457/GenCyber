@@ -1,9 +1,32 @@
-<?php 
+<?php
 include "login.php";
-if(isset($_POST['logout'])){
-	include "logout.php";
+if(isset($_POST['logout'])) {
+  include "logout.php";
 }
 session_start();
+
+/*
+ * This is where we will begin our query to insert
+ * judge values into judges_tbl
+ */
+if (isset($_POST['submit_judge'])) {
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  	$first_name = $_POST['first_name'];
+  	$last_name = $_POST['last_name'];
+  	$user_email = $_POST['user_email'];
+  	$phone_number = $_POST['phone_number'];
+  	$company_name = $_POST['company_name'];
+  	$company_role = $_POST['company_role'];
+  	$create_judge_query = "INSERT INTO judges_tbl ".
+  	  "(first_name, last_name, user_email, phone_number, company_name, company_role) ".
+  	  "VALUES (?, ?, ?, ?, ?, ?)";
+  	$stmt = mysqli_prepare($connection, $create_judge_query);
+    $stmt->bind_param("ssssss", $first_name, $last_name, $user_email, $phone_number, $company_name, $company_role);
+    $stmt->execute();
+    $stmt->close();
+//     Need to display success or error messaging
+  }
+}
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -185,7 +208,6 @@ a.button-prior {
   padding-bottom: 3px;
 }
 </style>
-
 <body>
   <header>
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
@@ -205,21 +227,30 @@ a.button-prior {
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
     </a>
   </div>
-<!--   <div class="wrapper-menu"> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
-<!--   </div> -->
   <div class="wrapper-admin-links">
     <a class="button-prior" href="http://localhost/GenCyber/teacher_management.php">Teacher Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/judge_management.php">Judge Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/admin_project_management.php">Project Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
-  <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div style="margin:0">
-      <p class="error">This is my admin->judge_mgmt page template</p>
-      <button style="height:10%" type="submit" name="create_judge">Create New Judge</button>
+  <div style="font-size:1.0em; min-height:60vh">
+    <button id="create_judge_btn">Create New Judge</button>
+      <form style="all:revert;display:none" method="post" id="judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
+        <label for="">First Name</label>
+        <input type="text" name="first_name" placeholder="First Name" required> <br>
+        <label for="">Last Name</label>
+        <input type="text" name="last_name" placeholder="Last Name" required> <br>
+        <label for="">Email</label>
+        <input type="text" name="user_email" placeholder="Judge Email" required> <br>
+        <label for="">Phone Number</label>
+        <input type="tel" name="phone_number" placeholder="Judge Phone" required> <br>
+        <label for="">Company Name</label>
+        <input type="text" name="company_name" placeholder="Judge Company" required> <br>
+        <label for="">Company Role</label>
+        <input type="text" name="company_role" placeholder="Company Role" required> <br>
+        <button type="submit" name="submit_judge">Submit</button>
+      </form>
+    <script src="index.js"></script>
     </div>
     <div>
       <h2>Active Judges</h2>
@@ -231,7 +262,7 @@ a.button-prior {
   <div>
     <p>
         To Do List:<br>
-        1. Create new Judges (button). At the click of the button, a web form will Judge's name, email, phone, company name. and the role will be displayed to enter the information. <br>
+        1. Transfer judge data to judges_tbl when submit is clicked <br>
 		2. Show the list of current active Judges with "inactivate" button <br>
 		3. Show the list of Archive old/inactive Judges with "activate" button <br>
 		4. Assign Judges to project(s) <br>
@@ -246,7 +277,9 @@ a.button-prior {
 <!--     <a href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
 <!--     <a href="http://localhost/GenCyber/help/help.php">Help</a> -->
   </div>
- 
+<!--   This is the script to hide/display our judge entry form -->
+  <script type="text/javascript">
+  </script>
 </body>
 </html>
 

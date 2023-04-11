@@ -36,25 +36,47 @@ function create_applications_table($connection){
  */
 
 if (isset($_POST['approve'])){
-  $user_email = $_POST['approve'];
-  //our query to transfer the data
-  $approval_query = "INSERT INTO users_tbl (First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name) ".
-    "SELECT First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name ".
-    "FROM Teacher_applications WHERE user_email=? ";
-  $stmt = mysqli_prepare($connection, $approval_query);
-  $stmt->bind_param("s", $user_email);
-  $stmt->execute();
-  $stmt->close();
-  //our query to remove the associated user from Teacher_applications
-  $remove_query = "DELETE FROM Teacher_applications WHERE user_email=? ";
-  $stmt = mysqli_prepare($connection, $remove_query);
-  $stmt->bind_param("s", $user_email);
-  $stmt->execute();
-  $stmt->close();
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user_email = $_POST['approve'];
+    /* 
+     * This is a query to insert into users_tbl 
+     * Not currently being used since we insert into teachers_tbl
+     */
+//     $approval_query = "INSERT INTO users_tbl (First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name) ".
+//       "SELECT First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name ".
+//       "FROM Teacher_applications WHERE user_email=? ";
+//     $stmt = mysqli_prepare($connection, $approval_query);
+//     $stmt->bind_param("s", $user_email);
+//     $stmt->execute();
+//     $stmt->close();
+    /* 
+     * Here is our query to insert applicants into teachers_tbl
+     */
+    $approval_query = "INSERT INTO teachers_tbl ".
+      "(first_name, last_name, school_address, school_city, school_name, school_role, school_state, user_email, user_role) ".
+      "SELECT First_name, Last_name, user_email, School_name, School_address, School_city, School_state, School_role, user_role ".
+      "FROM `Teacher_applications` ".
+      "WHERE user_email = ?";
+    $stmt = mysqli_prepare($connection, $approval_query);
+    $stmt->bind_param("s", $user_email);
+    $stmt->execute();
+    $stmt->close();
+    /*
+     * Here is where we delete the application from Teacher_applications
+     * Need to verify record was successfully transferred BEFORE deletion to prevent problems
+     */
+//     $remove_query = "DELETE FROM Teacher_applications WHERE user_email=? ";
+//     $stmt = mysqli_prepare($connection, $remove_query);
+//     $stmt->bind_param("s", $user_email);
+//     $stmt->execute();
+//     $stmt->close();
+  }
 }
 
 if (isset($_POST['deny'])){
-	
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  
+  }
 }
 ?>
 <!doctype html>
@@ -312,7 +334,7 @@ table, th, td {
         1. Need to update DB to hold Active Status <br>
         2. Show the list of active teachers with "inactivate" button. <br>
         3. Show the list of old/inactive teachers with "activate" button<br>
-        4. update CSS for table <br>
+        4. add CSS for table(s) <br>
       </p>
   </div>
   <div class="wrapper-footer">
