@@ -4,6 +4,7 @@ if(isset($_POST['logout'])){
 	include "logout.php";
 }
 session_start();
+require_once("database_conn.php");
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -215,7 +216,15 @@ a.button-prior {
     <div style="margin:0">
       <p class="error">This is my judge landing page template</p>
     </div>
-    <div>display list of projects with information as default once assigned</div>
+    <div style="font-size:24px; min-height:60vh;">
+        <center>
+            Hey👋, 👨‍⚖️!
+        </center>
+        <br>
+        <p>
+            Use the two buttons above to <br>navigate the Judge Dashboard.
+        </p>
+    </div>
     <div>
       <p>
         To Do List:<br>
