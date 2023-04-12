@@ -5,3 +5,7 @@ AllTeacherApplications() returns a list of all teacher applications
 AllActiveTeachers() returns a list of all active teachers included email , firstname and lastname
 
 AllActiveJudges()returns a list of all active Judges included email , firstname and lastname
+
+AllInactiveTeachers() returns a list of all inactive teachers included email , firstname and lastname
+
+DeleteApplication (in email varchar(100)) Removes application from the database
