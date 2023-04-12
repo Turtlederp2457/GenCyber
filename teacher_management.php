@@ -313,16 +313,35 @@ table, th, td {
           while($row=mysqli_fetch_assoc($result)){?>
           <tr><?php 
           foreach($row as $key => $field)
-          	echo '<td>' . htmlspecialchars($field) . '</td>';?>
+          echo '<td>' . htmlspecialchars($field) . '</td>';?>
             <td><button style="all:revert; background-color:green" type="submit" name="approve" value="<?=$row['user_email']?>">Approve</button></td>
             <td><button style="all:revert; background-color:red" type="submit" name="deny" value="<?=$row['user_email']?>">Deny</button></td>
           </tr>
-          <?php }?>
+          <?php } mysqli_next_result($connection);?>
       </table> 
     </form>  
     </div>
     <div style="margin-top:10px;font-size:1.0em; min-height:30vh" >
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Active Teachers</h2>
+      <table>
+        <tr>
+          <th>User Email</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Deactive</th>
+        </tr>
+        <?php
+          $result = mysqli_query($connection,"call AllActiveTeachers()");
+          while($row=mysqli_fetch_assoc($result)){?>
+          <tr><?php 
+          foreach($row as $key => $field)
+          	echo '<td>' . htmlspecialchars($field) . '</td>';?>
+            <td><button style="all:revert; background-color:green" type="submit" name="Deactive" value="<?=$row['user_email']?>">Approve</button></td>
+          </tr>
+          <?php }?>
+      </table> 
+    </form>  
     </div>
     <div style="margin-top:10px;font-size:1.0em; min-height:30vh" >
       <h2>Inactive Teachers</h2>

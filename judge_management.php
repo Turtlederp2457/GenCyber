@@ -14,16 +14,30 @@ if (isset($_POST['submit_judge'])) {
   	$first_name = $_POST['first_name'];
   	$last_name = $_POST['last_name'];
   	$user_email = $_POST['user_email'];
+    $password = $_POST['password'];
   	$phone_number = $_POST['phone_number'];
   	$company_name = $_POST['company_name'];
   	$company_role = $_POST['company_role'];
-  	$create_judge_query = "INSERT INTO judges_tbl ".
-  	  "(first_name, last_name, user_email, phone_number, company_name, company_role) ".
-  	  "VALUES (?, ?, ?, ?, ?, ?)";
-  	$stmt = mysqli_prepare($connection, $create_judge_query);
-    $stmt->bind_param("ssssss", $first_name, $last_name, $user_email, $phone_number, $company_name, $company_role);
+    $user_role = "J";
+    $active = 1;
+    //creates an entry into the Users table
+    $create_user_query = "insert into Users ".
+      "(Password, Active, user_email, User_role)".
+      "values (?, ?, ?, ?)";
+      $stmt = mysqli_prepare($connection, $create_user_query);
+      $stmt->bind_param("ssss", $password, $active, $user_email, $user_role);
+      $stmt->execute();
+    //Finds the UserID given by the database to the user
+    $UserID_query = "SELECT UserID FROM Users where user_email = '{$user_email}'";
+    $result = mysqli_query($connection, $UserID_query);
+    $userID = mysqli_fetch_assoc($result);
+    //Creates Judge entry using fetched UserID
+    $create_judge_query = "insert into Judges ".
+    "(First_name, Last_name, Phone, Company_name, UserID, company_role) ".
+    "values (?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($connection, $create_judge_query);
+    $stmt->bind_param("ssssss", $first_name, $last_name, $phone_number, $company_name, $userID["UserID"], $company_role);
     $stmt->execute();
-    $stmt->close();
 //     Need to display success or error messaging
   }
 }
@@ -243,7 +257,9 @@ a.button-prior {
         <label for="">Email</label>
         <input type="text" name="user_email" placeholder="Judge Email" required> <br>
         <label for="">Phone Number</label>
-        <input type="tel" name="phone_number" placeholder="Judge Phone" required> <br>
+        <input type="text" name="phone_number" placeholder="Judge Phone" required> <br>
+        <label for="">Password</label>
+        <input type="tel" name="password" placeholder="Password" required> <br>
         <label for="">Company Name</label>
         <input type="text" name="company_name" placeholder="Judge Company" required> <br>
         <label for="">Company Role</label>
