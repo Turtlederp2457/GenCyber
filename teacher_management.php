@@ -32,16 +32,22 @@ function create_applications_table($connection){
 }
 
 /* Here we will transfer registration data from Teacher_applications -> users_tbl
- * Then we will remove the associated row from Teacher_applications
- */
+* Then we will remove the associated row from Teacher_applications
+*/
 
 if (isset($_POST['approve'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_email = $_POST['approve'];
+    $approval_query = "INSERT INTO Users ".
+    "(Password, Active, user_email, User_role) ".
+    "SELECT ".
+    "FROM `Teacher_applications` ".
+    "WHERE user_email = ?";
+
     /* 
-     * This is a query to insert into users_tbl 
-     * Not currently being used since we insert into teachers_tbl
-     */
+    * This is a query to insert into users_tbl 
+    * Not currently being used since we insert into teachers_tbl
+    */
 //     $approval_query = "INSERT INTO users_tbl (First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name) ".
 //       "SELECT First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name ".
 //       "FROM Teacher_applications WHERE user_email=? ";
@@ -49,63 +55,67 @@ if (isset($_POST['approve'])){
 //     $stmt->bind_param("s", $user_email);
 //     $stmt->execute();
 //     $stmt->close();
-    /* 
-     * Here is our query to insert applicants into teachers_tbl
+/* 
+* Here is our query to insert applicants into teachers_tbl
+*/
+$approval_query = "INSERT INTO teachers_tbl ".
+"(first_name, last_name, school_address, school_city, school_name, school_role, school_state, user_email, user_role) ".
+"SELECT First_name, Last_name, user_email, School_name, School_address, School_city, School_state, School_role, user_role ".
+"FROM `Teacher_applications` ".
+"WHERE user_email = ?";
+$stmt = mysqli_prepare($connection, $approval_query);
+$stmt->bind_param("s", $user_email);
+$stmt->execute();
+$stmt->close();
+/*
+* Here is where we delete the application from Teacher_applications
+* Need to verify record was successfully transferred BEFORE deletion to prevent problems
      */
-    $approval_query = "INSERT INTO teachers_tbl ".
-      "(first_name, last_name, school_address, school_city, school_name, school_role, school_state, user_email, user_role) ".
-      "SELECT First_name, Last_name, user_email, School_name, School_address, School_city, School_state, School_role, user_role ".
-      "FROM `Teacher_applications` ".
-      "WHERE user_email = ?";
-    $stmt = mysqli_prepare($connection, $approval_query);
-    $stmt->bind_param("s", $user_email);
-    $stmt->execute();
-    $stmt->close();
-    /*
-     * Here is where we delete the application from Teacher_applications
-     * Need to verify record was successfully transferred BEFORE deletion to prevent problems
-     */
-//     $remove_query = "DELETE FROM Teacher_applications WHERE user_email=? ";
-//     $stmt = mysqli_prepare($connection, $remove_query);
-//     $stmt->bind_param("s", $user_email);
-//     $stmt->execute();
+    //     $remove_query = "DELETE FROM Teacher_applications WHERE user_email=? ";
+    //     $stmt = mysqli_prepare($connection, $remove_query);
+    //     $stmt->bind_param("s", $user_email);
+    //     $stmt->execute();
 //     $stmt->close();
-  }
+}
 }
 
 if (isset($_POST['deny'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  
+    $user_email = $_POST['deny'];
+    $stmt = mysqli_prepare($connection, "Call DeleteApplication(?)");
+    $stmt->bind_param("s", $user_email);
+    $stmt->execute();
+    $stmt->close();
   }
 }
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
 <head>
-<!-- Required meta tags --> 
-<meta charset = "utf-8"/>
-<meta name="sitePath" content="http://localhost/GenCyber/teacher_management.php" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
-<!-- Add your name here one you have helped write this code -->
-<meta name="author" content="Gatlin Zornes">
-<title>Teacher Management - Marshall University GenCyber</title>
-<!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/newHome_stylesheet.css" />  -->
-<!-- Might need this -->
-<!-- <base href="http://localhost/GenCyber/" target="_self"> -->
-<style>
-* { 
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box; 
-}
-
-body {
-  min-height: 100vh;
+  <!-- Required meta tags --> 
+  <meta charset = "utf-8"/>
+  <meta name="sitePath" content="http://localhost/GenCyber/teacher_management.php" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+  <!-- Add your name here one you have helped write this code -->
+  <meta name="author" content="Gatlin Zornes">
+  <title>Teacher Management - Marshall University GenCyber</title>
+  <!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/newHome_stylesheet.css" />  -->
+  <!-- Might need this -->
+  <!-- <base href="http://localhost/GenCyber/" target="_self"> -->
+  <style>
+    * { 
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box; 
+    }
+    
+    body {
+      min-height: 100vh;
 }
 
 header {
   background-image: linear-gradient(to right, rgba(0, 102, 0, 0.6), rgba(0, 0, 102, 0.6)),
-    url("http://localhost/GenCyber/imgs/GettyImages-cyber.jpg");
+  url("http://localhost/GenCyber/imgs/GettyImages-cyber.jpg");
   background-color: black;
   color: white;
 }
@@ -339,12 +349,31 @@ table, th, td {
           	echo '<td>' . htmlspecialchars($field) . '</td>';?>
             <td><button style="all:revert; background-color:green" type="submit" name="Deactive" value="<?=$row['user_email']?>">Approve</button></td>
           </tr>
-          <?php }?>
+          <?php } mysqli_next_result($connection);?>
       </table> 
     </form>  
     </div>
     <div style="margin-top:10px;font-size:1.0em; min-height:30vh" >
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Inactive Teachers</h2>
+      <table>
+        <tr>
+          <th>User Email</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Deactive</th>
+        </tr>
+        <?php
+          $result = mysqli_query($connection,"call AllInactiveTeachers()");
+          while($row=mysqli_fetch_assoc($result)){?>
+          <tr><?php 
+          foreach($row as $key => $field)
+          	echo '<td>' . htmlspecialchars($field) . '</td>';?>
+            <td><button style="all:revert; background-color:green" type="submit" name="Deactive" value="<?=$row['user_email']?>">Approve</button></td>
+          </tr>
+          <?php } mysqli_next_result($connection);?>
+      </table> 
+    </form> 
     </div>
   </div>
   <div>
