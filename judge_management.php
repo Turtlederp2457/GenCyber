@@ -269,7 +269,26 @@ a.button-prior {
     <script src="index.js"></script>
     </div>
     <div>
+      <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Active Judges</h2>
+      <table>
+        <tr>
+          <th>User Email</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Deactive</th>
+        </tr>
+        <?php
+          $result = mysqli_query($connection,"call AllActiveJudges()");
+          while($row=mysqli_fetch_assoc($result)){?>
+          <tr><?php 
+          foreach($row as $key => $field)
+          	echo '<td>' . htmlspecialchars($field) . '</td>';?>
+            <td><button style="all:revert; background-color:green" type="submit" name="Deactive" value="<?=$row['user_email']?>">Approve</button></td>
+          </tr>
+          <?php }?>
+      </table> 
+    </form>  
     </div>
     <div>
       <h2>Inactive Judges</h2>
