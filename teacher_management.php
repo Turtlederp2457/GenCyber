@@ -38,12 +38,30 @@ function create_applications_table($connection){
 if (isset($_POST['approve'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_email = $_POST['approve'];
-    $approval_query = "INSERT INTO Users ".
-    "(Password, Active, user_email, User_role) ".
-    "SELECT ".
-    "FROM `Teacher_applications` ".
-    "WHERE user_email = ?";
-
+    // Making the User table entry
+    $approval_query = "INSERT INTO Users (Password, Active, user_email, User_role)".
+    "values (?, 1, ?, 'T')";
+    $stmt = mysqli_prepare($connection, $approval_query);
+    $stmt->bind_param("ss", $user_email, $user_email);
+    $stmt->execute();
+    $stmt->close();
+    //Creating the Teacher table entry for user
+    $approval_query = "INSERT INTO Teachers (First_name, Last_name, School_name, School_address, School_city, School_state, UserID) ".
+    "select apply.First_name, apply.Last_name, apply.School_name, apply.School_address, apply.School_city, apply.School_state, Users.UserID ".
+    "from Teacher_applications apply ".
+    "inner join Users ".
+    "on apply.user_email = Users.user_email ".
+    "where apply.user_email = ?";
+    $stmt = mysqli_prepare($connection, $approval_query);
+    $stmt->bind_param("s", $user_email);
+    $stmt->execute();
+    $stmt->close();
+    //removes their old entry in teacher application
+    $delete_query = "delete from Teacher_applications where Teacher_applications.user_email = ?";
+    $stmt = mysqli_prepare($connection, $delete_query);
+    $stmt->bind_param("s", $user_email);
+    $stmt->execute();
+    $stmt->close();
     /* 
     * This is a query to insert into users_tbl 
     * Not currently being used since we insert into teachers_tbl
