@@ -221,6 +221,10 @@ a.button-prior {
   font-size: 1.2em;
   padding-bottom: 3px;
 }
+
+table, th, td {
+  border: 1px solid;
+}
 </style>
 <body>
   <header>
@@ -243,11 +247,11 @@ a.button-prior {
   </div>
   <div class="wrapper-admin-links">
     <a class="button-prior" href="http://localhost/GenCyber/teacher_management.php">Teacher Management</a>
-    <a class="button-prior" href="http://localhost/GenCyber/judge_management.php">Judge Management</a>
+    <a class="button-prior" style="background-color:#F0F0F0" href="http://localhost/GenCyber/judge_management.php">Judge Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/admin_project_management.php">Project Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
-  <div style="font-size:1.0em; min-height:60vh">
+  <div style="margin-top:10px; font-size:1.0em">
     <button id="create_judge_btn">Create New Judge</button>
       <form style="all:revert;display:none" method="post" id="judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
         <label for="">First Name</label>
@@ -268,7 +272,7 @@ a.button-prior {
       </form>
     <script src="index.js"></script>
     </div>
-    <div>
+    <div style="margin-top:10px">
       <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Active Judges</h2>
       <table>
@@ -284,7 +288,7 @@ a.button-prior {
           <tr><?php 
           foreach($row as $key => $field)
           	echo '<td>' . htmlspecialchars($field) . '</td>';?>
-            <td><button style="all:revert; background-color:green" type="submit" name="Deactive" value="<?=$row['user_email']?>">Approve</button></td>
+            <td><button style="all:revert; background-color:green; width:100%" type="submit" name="deactive" value="<?=$row['user_email']?>">Deactivate</button></td>
           </tr>
           <?php }?>
       </table> 
@@ -297,10 +301,9 @@ a.button-prior {
   <div>
     <p>
         To Do List:<br>
-        1. Transfer judge data to judges_tbl when submit is clicked <br>
-		2. Show the list of current active Judges with "inactivate" button <br>
-		3. Show the list of Archive old/inactive Judges with "activate" button <br>
-		4. Assign Judges to project(s) <br>
+        1. Show the list of current active Judges with "inactivate" button <br>
+		2. Show the list of Archive old/inactive Judges with "activate" button <br>
+		3. Assign Judges to project(s) <br>
       </p>
   </div>
   <div class="wrapper-footer">

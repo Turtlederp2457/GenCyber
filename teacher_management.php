@@ -6,35 +6,9 @@ if(isset($_POST['logout'])){
 session_start();
 require_once("database_conn.php");
 
-//our function to create the table of teacher applications
-//not currently used
-function create_applications_table($connection){ 
-  $stmt = mysqli_query($connection,"call AllTeacherApplications()");
-  $first_row = true;
-  while ($row = mysqli_fetch_assoc($stmt)) {
-    if ($first_row) {
-      $first_row = false;
-      // Output header row from keys.
-      echo '<tr>';
-      foreach($row as $key => $field) {
-        echo '<th>' . htmlspecialchars($key) . '</th>';
-      }
-      echo '<th>Approve</th>';
-      echo '<th>Deny</th>';
-      echo '</tr>';
-    }
-    echo '<tr>';
-    foreach($row as $key => $field) {
-      echo '<td>' . htmlspecialchars($field) . '</td>';
-    }
-  }
-  $stmt->close();
-}
-
-/* Here we will transfer registration data from Teacher_applications -> users_tbl
+/* Here we will transfer registration data from Teacher_applications -> Users & Teachers
 * Then we will remove the associated row from Teacher_applications
 */
-
 if (isset($_POST['approve'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_email = $_POST['approve'];
@@ -62,41 +36,12 @@ if (isset($_POST['approve'])){
     $stmt->bind_param("s", $user_email);
     $stmt->execute();
     $stmt->close();
-    /* 
-    * This is a query to insert into users_tbl 
-    * Not currently being used since we insert into teachers_tbl
-    */
-//     $approval_query = "INSERT INTO users_tbl (First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name) ".
-//       "SELECT First_name, Last_name, School_address, School_city, School_role, School_state, user_email, user_role, School_name ".
-//       "FROM Teacher_applications WHERE user_email=? ";
-//     $stmt = mysqli_prepare($connection, $approval_query);
-//     $stmt->bind_param("s", $user_email);
-//     $stmt->execute();
-//     $stmt->close();
-/* 
-* Here is our query to insert applicants into teachers_tbl
-*/
-$approval_query = "INSERT INTO teachers_tbl ".
-"(first_name, last_name, school_address, school_city, school_name, school_role, school_state, user_email, user_role) ".
-"SELECT First_name, Last_name, user_email, School_name, School_address, School_city, School_state, School_role, user_role ".
-"FROM `Teacher_applications` ".
-"WHERE user_email = ?";
-$stmt = mysqli_prepare($connection, $approval_query);
-$stmt->bind_param("s", $user_email);
-$stmt->execute();
-$stmt->close();
-/*
-* Here is where we delete the application from Teacher_applications
-* Need to verify record was successfully transferred BEFORE deletion to prevent problems
-     */
-    //     $remove_query = "DELETE FROM Teacher_applications WHERE user_email=? ";
-    //     $stmt = mysqli_prepare($connection, $remove_query);
-    //     $stmt->bind_param("s", $user_email);
-    //     $stmt->execute();
-//     $stmt->close();
-}
+  }
 }
 
+/* Here we will remove the application from Teacher_applications
+ * and auto-email user reasoning
+ */
 if (isset($_POST['deny'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_email = $_POST['deny'];
@@ -104,6 +49,24 @@ if (isset($_POST['deny'])){
     $stmt->bind_param("s", $user_email);
     $stmt->execute();
     $stmt->close();
+    //need to add auto-email here to supply reasoning to applicant
+  }
+}
+
+/* Here we will set the active status of Active Teachers to 0
+ */
+if (isset($_POST['deactivate'])){
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user_email = $_POST['deactivate'];
+    
+  }
+}
+
+/* Here we will set the active status of Inactive Teachers to 1
+ */
+if (isset($_POST['activate'])) {
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  
   }
 }
 ?>
@@ -311,18 +274,13 @@ table, th, td {
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
     </a>
   </div>
-<!--   <div class="wrapper-menu"> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
-<!--   </div> -->
   <div class="wrapper-admin-links">
-    <a class="button-prior" href="http://localhost/GenCyber/teacher_management.php">Teacher Management</a>
+    <a class="button-prior" style="background-color:#F0F0F0" href="http://localhost/GenCyber/teacher_management.php">Teacher Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/judge_management.php">Judge Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/admin_project_management.php">Project Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
-  <div style="margin-top:10px;font-size:1.0em; min-height:30vh" >
+  <div style="margin-top:10px;font-size:1.0em" >
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Teacher Applications</h2>
       <table>
@@ -342,14 +300,14 @@ table, th, td {
           <tr><?php 
           foreach($row as $key => $field)
           echo '<td>' . htmlspecialchars($field) . '</td>';?>
-            <td><button style="all:revert; background-color:green" type="submit" name="approve" value="<?=$row['user_email']?>">Approve</button></td>
-            <td><button style="all:revert; background-color:red" type="submit" name="deny" value="<?=$row['user_email']?>">Deny</button></td>
+            <td><button style="all:revert; background-color:green; width:100%" type="submit" name="approve" value="<?=$row['user_email']?>">Approve</button></td>
+            <td><button style="all:revert; background-color:red; width:100%" type="submit" name="deny" value="<?=$row['user_email']?>">Deny</button></td>
           </tr>
           <?php } mysqli_next_result($connection);?>
       </table> 
     </form>  
     </div>
-    <div style="margin-top:10px;font-size:1.0em; min-height:30vh" >
+    <div style="margin-top:20px;font-size:1.0em; min-height:30vh" >
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Active Teachers</h2>
       <table>
@@ -365,13 +323,13 @@ table, th, td {
           <tr><?php 
           foreach($row as $key => $field)
           	echo '<td>' . htmlspecialchars($field) . '</td>';?>
-            <td><button style="all:revert; background-color:green" type="submit" name="Deactive" value="<?=$row['user_email']?>">Approve</button></td>
+            <td><button style="all:revert; background-color:green; width:100%" type="submit" name="deactive" value="<?=$row['user_email']?>">Deactivate</button></td>
           </tr>
           <?php } mysqli_next_result($connection);?>
       </table> 
     </form>  
     </div>
-    <div style="margin-top:10px;font-size:1.0em; min-height:30vh" >
+    <div style="margin-top:20px;font-size:1.0em; min-height:30vh" >
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Inactive Teachers</h2>
       <table>
@@ -387,7 +345,7 @@ table, th, td {
           <tr><?php 
           foreach($row as $key => $field)
           	echo '<td>' . htmlspecialchars($field) . '</td>';?>
-            <td><button style="all:revert; background-color:green" type="submit" name="Deactive" value="<?=$row['user_email']?>">Approve</button></td>
+            <td><button style="all:revert; background-color:green; width:100%" type="submit" name="activate" value="<?=$row['user_email']?>">Activate</button></td>
           </tr>
           <?php } mysqli_next_result($connection);?>
       </table> 
