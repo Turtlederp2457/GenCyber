@@ -212,7 +212,7 @@ a.button-prior {
   <div class="wrapper-admin-links">
     <a class="button-prior" href="http://localhost/GenCyber/teacher_management.php">Teacher Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/judge_management.php">Judge Management</a>
-    <a class="button-prior" href="http://localhost/GenCyber/admin_project_management.php">Project Management</a>
+    <a class="button-prior" style="background-color:#F0F0F0" href="http://localhost/GenCyber/admin_project_management.php">Project Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
