@@ -43,7 +43,7 @@ if (isset($_POST['login'])) {
       $stmt = mysqli_prepare($connection, $login_query);
       $stmt->bind_param("ss", $login_user_email, $user_password);
       $stmt->execute();
-      $stmt->bind_result($login_user_email, $user_password, $user_role);
+      $stmt->bind_result($login_user_email, $user_password, $user_role, $UserID);
       $result = $stmt->fetch();
       $stmt->close();
       if (!$result){
@@ -51,7 +51,8 @@ if (isset($_POST['login'])) {
       } else {
       	session_start();
       	$_SESSION['user_role'] = $user_role;
-      	$_SESSION['first_name'] = $first_name;
+      	$_SESSION['first_name'] = $login_user_email;
+		$_SESSION['UserID'] = $UserID;
       	switch ($_SESSION['user_role']) {
       	  case 'A': 
       	    header('location: admin_landing.php');
