@@ -3,7 +3,7 @@ x means completed
     Known Bugs:
 
     ETC to add:
-        Password field in login page should be censored  [](Layne recomendation)
+        Password field in login page should be censored  [X](Layne recomendation)
 
 
     Implement teacher page (William is boss of this) []
@@ -17,8 +17,8 @@ x means completed
     Implement admin page  (Dakota and Mister Gatlin Zornes are boss of this) []
         Teacher management page []
             Teacher applications list [x]
-            Active teacher list []
-            Inactive teacher list []
+            Active teacher list [X]
+            Inactive teacher list [X]
         Judge management page []
         Project management page []
         Winner management page []
