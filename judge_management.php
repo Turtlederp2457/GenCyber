@@ -239,7 +239,7 @@ table, th, td {
       <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
         style="height:100px;width:120px" alt="Marshall University logo" class="marshall-logo"/>
     </a>
-    <a style="color:white" class="better-title center" href="http://localhost/GenCyber/newHome.php">Marshall University GenCyber</a>
+    <a style="color:white" class="better-title center" href="http://localhost/GenCyber/admin_landing.php">Marshall University GenCyber</a>
     <a class="center" target="_blank" href="https://www.gen-cyber.com/">
       <img src="https://www.gen-cyber.com/static/gencyber_public_web/img/gencyber-logo-small.png" 
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
