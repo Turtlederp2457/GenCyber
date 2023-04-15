@@ -7,11 +7,11 @@ session_start();
 <head>
 <!-- Required meta tags --> 
 <meta charset = "utf-8"/>
-<meta name="sitePath" content="http://localhost/GenCyber/prior_winners.php" />
+<meta name="sitePath" content="http://localhost/GenCyber/contact.php" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
 <!-- Add your name here one you have helped write this code -->
 <meta name="author" content="Gatlin Zornes">
-<title>Prior Winners - Marshall University GenCyber</title>
+<title>Contact - Marshall University GenCyber</title>
 <!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/newHome_stylesheet.css" />  -->
 <!-- Might need this -->
 <!-- <base href="http://localhost/GenCyber/" target="_self"> -->
@@ -174,6 +174,7 @@ a.button-prior {
   font-size: 1.2em;
   padding-bottom: 3px;
 }
+
 </style>
 <body>
   <header>
@@ -213,32 +214,17 @@ a.button-prior {
   <div class="wrapper-menu">
     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a>
     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
-    <a class="button-prior" href="http://localhost/GenCyber/contact.php">Contact Us</a>
+    <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
   </div>
   <div style="min-height:65vh" class="wrapper-main">
-    <div style="margin:0">
-      <p>
-        <label for="">Prior Events</label> <br>
-        <select id="select-event" placeholder="Choose Event">
-          <option value="">Choose an Event</option>
-          <option value="event-1">Event 1</option>
-          <option value="event-2">Event 2</option>
-          <option value="event-3">Event 3</option>
-          <option value="event-4">Event 4</option>
-        </select>
-      </p>
-    </div>
-    <div>main content here</div>
-    <div style="font-size:1.0em; margin:0">
-      <p>
-        To Do List:<br>
-        1. Begin adding prior winners to database <br>
-        2. Pull data from selected event <br>
-        3. Display retrieved data <br>
-        4. ...
-      </p>
-    </div>
+    <div></div>
+    <p class="center" style="font-size:1.5em"><span style="text-decoration:underline;text-decoration-color:green">GenCyber Camps</span><br>
+      Marshall University<br>
+	  1 John Marshall Drive<br>
+	  Huntington, WV 25755<br>
+	  gencyber@marshall.edu<br> 
   </div>
+  <div></div>
   <div class="wrapper-footer">
     <div>Date Created</div>
     <div>Copyright</div>
@@ -248,7 +234,5 @@ a.button-prior {
 <!--     <a href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
 <!--     <a href="http://localhost/GenCyber/help/help.php">Help</a> -->
   </div>
- 
 </body>
 </html>
-
