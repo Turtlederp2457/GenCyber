@@ -37,7 +37,7 @@ if (isset($_POST['submit_judge'])) {
     $stmt = mysqli_prepare($connection, $create_judge_query);
     $stmt->bind_param("ssssss", $first_name, $last_name, $phone_number, $company_name, $userID["UserID"], $company_role);
     $stmt->execute();
-    $stmt-close();
+    $stmt->close();
 //     Need to display success or error messaging
   }
 }
@@ -61,7 +61,7 @@ if (isset($_POST['activate'])) {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_email = $_POST['activate'];
     $activate_query = "UPDATE Users SET Active=1 WHERE user_email = ?";
-    $stmt = mysqli_prepare($connection, $deactivate_query);
+    $stmt = mysqli_prepare($connection, $activate_query);
     $stmt->bind_param("s", $user_email);
     $stmt->execute();
     $stmt->close();
@@ -74,7 +74,11 @@ if (isset($_POST['activate'])) {
 if (isset($_POST['assign_judge'])) {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_email = $_POST['assign_judge'];
-    echo $user_email;
+    $review_query = "call MakeReview(?, ?)";
+    $stmt = mysqli_prepare($connection, $review_query);
+    $stmt->bind_param("ss", $ProjectID, $JudgeID);
+    $stmt->execute();
+    $stmt->close();
   }
 }
 ?>
@@ -331,8 +335,13 @@ table, th, td {
 <!--               Need to populate project_selection using query to pull all active projects -->
           	    <select name="project_selection">
                   <option value="">Select a Project</option>
+                  <?php 
+                  $EventID = 2020;//Temp value until we set current event through some other script
+                      $projectQuery = "call AllProjects('{$EventID}')";
+                      $result = mysqli_query($connection, $projectQuery);
+                  ?>
                   <option value="project1">Project 1</option>
-            	  <option value="project2">Project 2</option>
+            	    <option value="project2">Project 2</option>
           	    </select>
           	    <button style="all:revert" type="submit" name="assign_judge" value="<?=$row['user_email']?>">Assign</button>
       		  </div>
@@ -353,11 +362,7 @@ table, th, td {
           <th>Deactivate</th>
         </tr>
         <?php
-//           $query = "SELECT Users.user_email, Judges.First_name, Judges.Last_name ".
-//             "FROM Users ".
-//             "INNER JOIN Judges ON Users.UserID = Judges.UserID ".
-//             "WHERE Users.Active = 0";      
-//           $result = mysqli_query($connection, "call AllInactiveJudges");
+          $result = mysqli_query($connection, "call AllInactiveJudges()");
           while($row=mysqli_fetch_assoc($result)){?>
           <tr><?php 
           foreach($row as $key => $field)
