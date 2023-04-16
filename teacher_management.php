@@ -58,7 +58,11 @@ if (isset($_POST['deny'])){
 if (isset($_POST['deactivate'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_email = $_POST['deactivate'];
-    
+    $deactivate_query = "UPDATE Users Set Active=0 WHERE user_email = ?";
+    $stmt = mysqli_prepare($connection, $deactivate_query);
+    $stmt->bind_param("s", $user_email);
+    $stmt->execute();
+    $stmt->close();
   }
 }
 
@@ -66,7 +70,12 @@ if (isset($_POST['deactivate'])){
  */
 if (isset($_POST['activate'])) {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  
+    $user_email = $_POST['activate'];
+    $deactivate_query = "UPDATE Users Set Active=1 WHERE user_email = ?";
+    $stmt = mysqli_prepare($connection, $deactivate_query);
+    $stmt->bind_param("s", $user_email);
+    $stmt->execute();
+    $stmt->close();
   }
 }
 ?>
@@ -268,7 +277,7 @@ table, th, td {
       <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
         style="height:100px;width:120px" alt="Marshall University logo" class="marshall-logo"/>
     </a>
-    <a style="color:white" class="better-title center" href="http://localhost/GenCyber/newHome.php">Marshall University GenCyber</a>
+    <a style="color:white" class="better-title center" href="http://localhost/GenCyber/admin_landing.php">Marshall University GenCyber</a>
     <a class="center" target="_blank" href="https://www.gen-cyber.com/">
       <img src="https://www.gen-cyber.com/static/gencyber_public_web/img/gencyber-logo-small.png" 
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
@@ -323,7 +332,7 @@ table, th, td {
           <tr><?php 
           foreach($row as $key => $field)
           	echo '<td>' . htmlspecialchars($field) . '</td>';?>
-            <td><button style="all:revert; background-color:green; width:100%" type="submit" name="deactive" value="<?=$row['user_email']?>">Deactivate</button></td>
+            <td><button style="all:revert; background-color:red; width:100%" type="submit" name="deactivate" value="<?=$row['user_email']?>">Deactivate</button></td>
           </tr>
           <?php } mysqli_next_result($connection);?>
       </table> 

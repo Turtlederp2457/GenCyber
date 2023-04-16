@@ -1,4 +1,6 @@
 <?php
+include "login.php";
+session_start();
 $first_name = "";
 $last_name = "";
 $user_email = "";
@@ -32,8 +34,7 @@ function prepared_query($mysqli, $sql, $params, $types = "") {
   $stmt->execute();
   return $stmt;
 }
-include "login.php";
-session_start();
+
 if(isset($_POST['register'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
   //Validate our user input before setting values
@@ -195,7 +196,7 @@ if(isset($_POST['register'])){
 <head>
 <!-- Required meta tags --> 
 <meta charset = "utf-8"/>
-<meta name="sitePath" content="http://localhost/GenCyber/newHome.php" />
+<meta name="sitePath" content="http://localhost/GenCyber/register.php" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
 <!-- Add your name here once you have helped write this code -->
 <meta name="author" content="Gatlin Zornes">
@@ -204,7 +205,6 @@ if(isset($_POST['register'])){
 <!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/register_stylesheet.css" /> -->
 <!-- Might need this -->
 <!-- <base href="http://localhost/GenCyber/" target="_self"> -->
-
 <style>
 * { 
   margin: 0;
@@ -223,10 +223,11 @@ header {
   color: white;
 }
 
-.login-form {
+
+form {
   display: grid;
   margin-bottom: 0;
-  grid-template-columns: repeat(4, [col-start] 1fr);
+/*   grid-template-columns: repeat(4, [col-start] 1fr); */
 }
 
 form p, div, span, label {
@@ -234,6 +235,11 @@ form p, div, span, label {
   margin: auto;
 }
 
+.login-form {
+  display: grid;
+  margin-bottom: 0;
+  grid-template-columns: repeat(4, [col-start] 1fr);
+}
 
 button[type=submit] {
   width: 50%;
@@ -303,7 +309,6 @@ button[type=submit]:hover {
   font: caption;
   margin: auto;
 }
-
 a.button-menu:hover,
 button.button-general:hover,
 a.button-general:hover {
@@ -351,7 +356,6 @@ a.button-prior {
 .wrapper-main {
   display: grid;
   grid-template-columns: repeat(3, [col-start] 1fr);
-  grid-template-rows: 20% 80%;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -367,15 +371,9 @@ a.button-prior {
   padding-bottom: 3px;
 }
 
-.wrapper-registration {
-  font-size: 0.8em;
-  display: grid;
-}
-
 .registration-form {
-  display: grid;
+  font-size: 0.8em;
 }
-
 </style>
 <body>
   <header>
@@ -383,16 +381,17 @@ a.button-prior {
       <button class="button-general" type="submit" name="login">Log In</button>
       <p>
         <label for="">Email</label>
-        <input type="text" name="user_email" value="<?php echo $login_user_email;?>">
+        <input type="text" name="login_user_email" value="<?php echo $login_user_email;?>">
       </p>
       <p>
         <label for="">Password</label>
-        <input type="text" name="user_password" value="<?php echo $user_password;?>">
+        <input type="password" name="user_password">
       </p>
       <a class="button-general" href="http://localhost/GenCyber/register.php">Register</a>
       <br>
       <div>
-        <span class="error"><?php echo $login_email_error;?></span>
+<!--   		need to fix this area -->
+        <span class="error"><?php echo $login_email_error ?></span>
         <span class="error"><?php echo $login_error;?></span>
       </div>
       <div>

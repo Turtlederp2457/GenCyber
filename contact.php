@@ -186,7 +186,7 @@ a.button-prior {
       </p>
       <p>
         <label for="">Password</label>
-        <input type="text" name="user_password" value="<?php echo $user_password;?>">
+        <input type="password" name="user_password">
       </p>
       <a class="button-general" href="http://localhost/GenCyber/register.php">Register</a>
       <br>

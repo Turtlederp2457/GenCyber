@@ -4,7 +4,6 @@ if(isset($_POST['logout'])) {
   include "logout.php";
 }
 session_start();
-
 /*
  * This is where we will begin our query to insert
  * judge values into judges_tbl
@@ -38,7 +37,44 @@ if (isset($_POST['submit_judge'])) {
     $stmt = mysqli_prepare($connection, $create_judge_query);
     $stmt->bind_param("ssssss", $first_name, $last_name, $phone_number, $company_name, $userID["UserID"], $company_role);
     $stmt->execute();
+    $stmt-close();
 //     Need to display success or error messaging
+  }
+}
+
+/* Here we will set the active status of Judges to 0
+ */
+if (isset($_POST['deactivate'])){
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user_email = $_POST['deactivate'];
+    $deactivate_query = "UPDATE Users SET Active=0 WHERE user_email = ?";
+    $stmt = mysqli_prepare($connection, $deactivate_query);
+    $stmt->bind_param("s", $user_email);
+    $stmt->execute();
+    $stmt->close();
+  }
+}
+
+/* Here we will set the active status of Judges to 1
+ */  
+if (isset($_POST['activate'])) {
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user_email = $_POST['activate'];
+    $activate_query = "UPDATE Users SET Active=1 WHERE user_email = ?";
+    $stmt = mysqli_prepare($connection, $deactivate_query);
+    $stmt->bind_param("s", $user_email);
+    $stmt->execute();
+    $stmt->close();
+  }
+}
+
+/* Here we will assign judges to selected projects
+ * Projects selected from dropdown menu
+ */
+if (isset($_POST['assign_judge'])) {
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user_email = $_POST['assign_judge'];
+    echo $user_email;
   }
 }
 ?>
@@ -239,7 +275,7 @@ table, th, td {
       <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
         style="height:100px;width:120px" alt="Marshall University logo" class="marshall-logo"/>
     </a>
-    <a style="color:white" class="better-title center" href="http://localhost/GenCyber/newHome.php">Marshall University GenCyber</a>
+    <a style="color:white" class="better-title center" href="http://localhost/GenCyber/admin_landing.php">Marshall University GenCyber</a>
     <a class="center" target="_blank" href="https://www.gen-cyber.com/">
       <img src="https://www.gen-cyber.com/static/gencyber_public_web/img/gencyber-logo-small.png" 
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
@@ -261,9 +297,9 @@ table, th, td {
         <label for="">Email</label>
         <input type="text" name="user_email" placeholder="Judge Email" required> <br>
         <label for="">Phone Number</label>
-        <input type="text" name="phone_number" placeholder="Judge Phone" required> <br>
+        <input type="tel" name="phone_number" placeholder="Judge Phone" required> <br>
         <label for="">Password</label>
-        <input type="tel" name="password" placeholder="Password" required> <br>
+        <input type="text" name="password" placeholder="Password" required> <br>
         <label for="">Company Name</label>
         <input type="text" name="company_name" placeholder="Judge Company" required> <br>
         <label for="">Company Role</label>
@@ -271,16 +307,17 @@ table, th, td {
         <button type="submit" name="submit_judge">Submit</button>
       </form>
     <script src="index.js"></script>
-    </div>
-    <div style="margin-top:10px">
-      <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+  </div>
+  <div style="margin-top:20px;min-height:30vh">
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Active Judges</h2>
       <table>
         <tr>
           <th>User Email</th>
           <th>First Name</th>
           <th>Last Name</th>
-          <th>Deactive</th>
+          <th>Deactivate</th>
+          <th>Assign to Project</th>
         </tr>
         <?php
           $result = mysqli_query($connection,"call AllActiveJudges()");
@@ -288,22 +325,53 @@ table, th, td {
           <tr><?php 
           foreach($row as $key => $field)
           	echo '<td>' . htmlspecialchars($field) . '</td>';?>
-            <td><button style="all:revert; background-color:green; width:100%" type="submit" name="deactive" value="<?=$row['user_email']?>">Deactivate</button></td>
+            <td><button style="all:revert; background-color:red; width: 100%;" type="submit" name="deactivate" value="<?=$row['user_email']?>">Deactivate</button></td>
+            <td>
+              <div>
+<!--               Need to populate project_selection using query to pull all active projects -->
+          	    <select name="project_selection">
+                  <option value="">Select a Project</option>
+                  <option value="project1">Project 1</option>
+            	  <option value="project2">Project 2</option>
+          	    </select>
+          	    <button style="all:revert" type="submit" name="assign_judge" value="<?=$row['user_email']?>">Assign</button>
+      		  </div>
+      		</td>
+          </tr>
+        <?php }?>
+      </table> 
+    </form>
+  </div>
+  <div style="margin-top:20px;min-height:30vh">
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+      <h2>Inactive Judges</h2>
+      <table style="min-width:50vh">
+        <tr>
+          <th>User Email</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Deactivate</th>
+        </tr>
+        <?php
+//           $query = "SELECT Users.user_email, Judges.First_name, Judges.Last_name ".
+//             "FROM Users ".
+//             "INNER JOIN Judges ON Users.UserID = Judges.UserID ".
+//             "WHERE Users.Active = 0";      
+//           $result = mysqli_query($connection, "call AllInactiveJudges");
+          while($row=mysqli_fetch_assoc($result)){?>
+          <tr><?php 
+          foreach($row as $key => $field)
+          	echo '<td>' . htmlspecialchars($field) . '</td>';?>
+            <td><button style="all:revert; background-color:green; width:100%" type="submit" name="activate" value="<?=$row['user_email']?>">Activate</button></td>
           </tr>
           <?php }?>
       </table> 
-    </form>  
-    </div>
-    <div>
-      <h2>Inactive Judges</h2>
     </div>
   </div>
-  <div>
+  <div style="background:black; color:red">
     <p>
         To Do List:<br>
-        1. Show the list of current active Judges with "inactivate" button <br>
-		2. Show the list of Archive old/inactive Judges with "activate" button <br>
-		3. Assign Judges to project(s) <br>
+     	1. Assign Judges to project(s) <br>
       </p>
   </div>
   <div class="wrapper-footer">
@@ -320,4 +388,3 @@ table, th, td {
   </script>
 </body>
 </html>
-

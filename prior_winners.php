@@ -185,7 +185,7 @@ a.button-prior {
       </p>
       <p>
         <label for="">Password</label>
-        <input type="text" name="user_password" value="<?php echo $user_password;?>">
+        <input type="password" name="user_password">
       </p>
       <a class="button-general" href="http://localhost/GenCyber/register.php">Register</a>
       <br>
@@ -213,7 +213,7 @@ a.button-prior {
   <div class="wrapper-menu">
     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a>
     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
-    <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
+    <a class="button-prior" href="http://localhost/GenCyber/contact.php">Contact Us</a>
   </div>
   <div style="min-height:65vh" class="wrapper-main">
     <div style="margin:0">
