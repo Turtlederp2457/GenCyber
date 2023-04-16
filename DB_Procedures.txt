@@ -13,3 +13,5 @@ DeleteApplication (in email varchar(100)) Removes application from the database
 AllInactiveJudges() returns a list of First name, last name, phone, and email of all judges whos account is considered inactive
 
 MakeReview(ProjectID, JudgeID) assigns a review to a judge
+
+AllProjects(EventID) Gives a list of all projectIDs and titles in the given event
