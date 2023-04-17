@@ -1,10 +1,233 @@
-<?php 
+<?php
+$new_phonenum = "";
+$confirm_phonenum = "";
+$new_email = "";
+$confirm_email = "";
+$current_password = "";
+$new_password = "";
+$confirm_password = "";
+
+$new_phonenum_error = "";
+$confirm_phonenum_error = "";
+$new_email_error = "";
+$confirm_email_error = "";
+$current_password_error = "";
+$new_password_error = "";
+$confirm_password_error = "";
+$general_error = "";
 include "login.php";
 if(isset($_POST['logout'])){
 	include "logout.php";
 }
 session_start();
 require_once("database_conn.php");
+
+if (isset($_POST['phoneSubmit'])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // collect value of input field
+        // check for any errors
+        //Phone Number:
+        if (test_input($_POST['new_phonenum']) == test_input($_POST['confirm_phonenum'])) {
+            if (empty(test_input($_POST['new_phonenum']))) {
+                $new_phonenum_error = "Field cannot be empty";
+                $general_error = "Something went wrong. Please try again.";
+            } elseif (preg_match("/^[a-zA-Z]*$/", test_input($_POST['new_phonenum']))) {
+                $new_phonenum_error = "Only numbers allowed";
+                $general_error = "Something went wrong. Please try again.";
+            } else {
+                $new_phonenum = test_input($_POST['new_phonenum']);
+                $general_error = "";
+            }
+
+            if (empty(test_input($_POST['confirm_phonenum']))) {
+                $confirm_phonenum_error = "Field cannot be empty";
+                $general_error = "Something went wrong. Please try again.";
+            } elseif (preg_match("/^[a-zA-Z]*$/", test_input($_POST['confirm_phonenum']))) {
+                $confirm_phonenum_error = "Only numbers allowed";
+                $general_error = "Something went wrong. Please try again.";
+            } else {
+                $confirm_phonenum = test_input($_POST['confirm_phonenum']);
+                $general_error = "";
+            }
+        } else {
+            $new_phonenum_error = "Input fields must match";
+            $confirm_phonenum_error = "Input fields must match";
+            $general_error = "Something went wrong. Please try again.";
+        }
+    }
+    
+    if (empty($new_phonenum_error) && empty($confirm_phonenum_error) && empty($general_error)) {
+        if ($stmt = $connection->prepare('SELECT Phone FROM Judges WHERE Phone = ?')) {
+            // Bind parameters (s = string, i = int, b = blob, etc), hash the password using the PHP password_hash function.
+            $stmt->bind_param('s', $new_phonenum);
+            $stmt->execute();
+            $stmt->store_result();
+            // Store the result so we can check if the account exists in the database.
+            if ($stmt->num_rows > 0) {
+                // Phone already exists
+                header('location: judge_error_page.php');
+            } else {
+                $sql = "UPDATE Judges SET Phone = ". $new_phonenum . " WHERE UserID = ". $_SESSION['UserID'];
+                if (mysqli_query($connection, $sql)) {
+                    echo "Row updated successfully";
+                    header('location: judge_profile_management.php');
+                } else {
+                    header('location: judge_error_page.php');
+                }
+            }
+            mysqli_close($connection);
+        } else {
+            // Something is wrong with the SQL statement
+            echo 'Could not prepare statement!';
+        }
+        $connection->close();
+    }
+}
+//email:
+if (isset($_POST['emailSubmit'])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (test_input($_POST['new_email']) == test_input($_POST['confirm_email'])) {
+            if (empty(test_input($_POST['new_email']))) {
+                $new_email_error = "Field cannot be empty";
+                $general_error = "Something went wrong. Please try again.";
+            } elseif (!filter_var(test_input($_POST['new_email']), FILTER_VALIDATE_EMAIL)) {
+                $new_email_error = "Invalid email address";
+                $general_error = "Something went wrong. Please try again.";
+            } else {  //check email uniqueness here
+                $email_query = "SELECT user_email FROM Users WHERE user_email = ?";
+                if ($stmt = mysqli_prepare($connection, $email_query)) {
+                    mysqli_stmt_bind_param($stmt, "s", $param_new_email);
+                    $param_new_email = test_input($_POST['new_email']);
+                    if (mysqli_stmt_execute($stmt)) {
+                        mysqli_stmt_store_result($stmt);
+                        if (mysqli_stmt_num_rows($stmt) == 1) {
+                            $new_email_error = "Email already in use";
+                            $general_error = "Something went wrong. Please try again.";
+                        } else {
+                            $new_email = test_input($_POST['new_email']);
+                        }
+                    } else {
+                        echo "something went wrong. Please try again later.";
+                    }
+                }
+                mysqli_stmt_close($stmt);
+            }
+            
+            if (empty(test_input($_POST['confirm_email']))) {
+                $confirm_email_error = "Field cannot be empty";
+                $general_error = "Something went wrong. Please try again.";
+            } elseif (!filter_var(test_input($_POST['confirm_email']), FILTER_VALIDATE_EMAIL)) {
+                $confirm_email_error = "Invalid email address";
+                $general_error = "Something went wrong. Please try again.";
+            } else {  //check email uniqueness here
+                $email_query = "SELECT user_email FROM Users WHERE user_email = ?";
+                if ($stmt = mysqli_prepare($connection, $email_query)) {
+                    mysqli_stmt_bind_param($stmt, "s", $param_confirm_email);
+                    $param_confirm_email = test_input($_POST['confirm_email']);
+                    if (mysqli_stmt_execute($stmt)) {
+                        mysqli_stmt_store_result($stmt);
+                        if (mysqli_stmt_num_rows($stmt) == 1) {
+                            $confirm_email_error = "Email already in use";
+                            $general_error = "Something went wrong. Please try again.";
+                        } else {
+                            $new_email = test_input($_POST['confirm_email']);
+                        }
+                    } else {
+                        echo "something went wrong. Please try again later.";
+                    }
+                }
+                mysqli_stmt_close($stmt);
+            }
+        } else{
+            $new_email_error = "Input fields must match";
+            $confirm_email_error = "Input fields must match";
+            $general_error = "Something went wrong. Please try again.";
+        }
+    }
+    
+    if (empty($new_email_error) && empty($confirm_email_error) && empty($general_error)) {
+        if ($stmt = $connection->prepare('SELECT user_email FROM Users WHERE user_email = ?')) {
+            // Bind parameters (s = string, i = int, b = blob, etc)
+            $stmt->bind_param('s', $new_email);
+            $stmt->execute();
+            $stmt->store_result();
+            // Store the result so we can check if the account exists in the database.
+            if ($stmt->num_rows > 0) {
+                // Email already exists
+                header('location: judge_error_page.php');
+            } else {
+                $sql = "UPDATE Users SET user_email = '". $new_email . "' WHERE UserID = ". $_SESSION['UserID'];
+                if (mysqli_query($connection, $sql)) {
+                    echo "Row updated successfully";
+                    header('location: judge_profile_management.php');
+                } else {
+                    header('location: judge_error_page.php');
+                }
+            }
+            mysqli_close($connection);
+        } else {
+            // Something is wrong with the SQL statement
+            echo 'Could not prepare statement!';
+            header('location: judge_error_page.php');
+        }
+        $connection->close();
+    }
+}
+//password
+if (isset($_POST['passwordSubmit'])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (test_input($_POST['new_password']) == test_input($_POST['confirm_password'])) {
+            if (empty(test_input($_POST['current_password']))) {
+                $current_password_error = "Field cannot be empty";
+                $general_error = "Something went wrong. Please try again.";
+            } else {
+                $current_password = test_input($_POST['current_password']);
+                $general_error = "";
+            }
+            
+            if (empty(test_input($_POST['new_password']))) {
+                $new_password_error = "Field cannot be empty";
+                $general_error = "Something went wrong. Please try again.";
+            } else {
+                $new_password = test_input($_POST['new_password']);
+                $general_error = "";
+            }
+
+            if (empty(test_input($_POST['confirm_password']))) {
+                $confirm_password_error = "Field cannot be empty";
+                $general_error = "Something went wrong. Please try again.";
+            } else {
+                $confirm_password = test_input($_POST['confirm_password']);
+                $general_error = "";
+            }
+        } else {
+            $new_password_error = "Input fields must match";
+            $confirm_password_error = "Input fields must match";
+            $general_error = "Something went wrong. Please try again.";
+        }
+    }
+    
+    if (empty($new_password_error) && empty($confirm_password_error) && empty($general_error)) {
+        $sql = "SELECT Password FROM Users WHERE UserID = ". $_SESSION['UserID'] ." and Password = '". $current_password ."'";
+        $result = mysqli_query($connection, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            // Password is good
+            $sql = "UPDATE Users SET `Password` = '" . $new_password . "' WHERE UserID = " . $_SESSION['UserID'];
+            if (mysqli_query($connection, $sql)) {
+                header('location: judge_profile_management.php');
+            } else {
+                echo "Error updating row: " . mysqli_error($connection);
+                $general_error = "Something went wrong. Please try again.";
+                header('location: judge_error_page.php');
+            }
+            mysqli_close($connection);
+        } else {
+            // Something is wrong with the SQL statement
+            header('location: judge_error_page.php');
+        }
+        mysqli_close($connection);
+    }
+}
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -241,7 +464,24 @@ a.button-prior {
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
+      <p>
+      <?php
+      $sql = "SELECT First_name FROM Judges WHERE UserID = " . $_SESSION['UserID'];
+      $result = mysqli_query($connection, $sql);
+
+      if (mysqli_num_rows($result) > 0) {
+          // Save row data to variable
+          $row = mysqli_fetch_assoc($result);
+          // Print row data for testing
+          echo "Welcome, " . $row["First_name"];
+          //print_r($row);
+      } else {
+          echo "No rows found";
+      }
+      
+      mysqli_close($connection);
+      ?>
+      </p>
     </form>
   </header>
   <div class="wrapper-logos">
@@ -269,49 +509,88 @@ a.button-prior {
 	<div style="margin:0">
         <div id="squares">
             <div id="BluePanel">
-                <h3><strong> Update Contact Information:</strong></h3>
-                <button onclick="togglePhoneNum()">Change Phone Number</button><br>
-                <button onclick="toggleEmail()">Change Email</button><br><br>
-                <h3><strong> Update Password:</strong></h3>
-                <button onclick="togglePassword()">Change Password</button><br>
+                <h3><strong> Update Contact Information:</strong></h3><br>
+                <button class="button-prior" style="background-color: #F0F0F0; font-size: 1.0em;" onclick="togglePhoneNum()">Change Phone Number</button><br><br>
+                <button class="button-prior" style="background-color: #F0F0F0; font-size: 1.0em;" onclick="toggleEmail()">Change Email</button><br><br>
+                <h3><strong> Update Password:</strong></h3><br>
+                <button class="button-prior" style="background-color: #F0F0F0; font-size: 1.0em;" onclick="togglePassword()">Change Password</button><br>
             </div>
             
         </div>
             
     </div>
       <div>
-          <div id="tip">Manage your profile with the buttons on the left.🔧</div>
+          <div id="tip">
+              🔧 Manage your profile with the buttons on the left.<br><br>
+              <p class="error"><?php echo $general_error;?></p>
+          </div>
           
           <!-- put forms here -->
-          <form id="changePhoneNum" style="display:none">
+          <form id="changePhoneNum" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" style="display:none">
               <div id="newForm">
-                  <label for="newNum">Enter your new Phone Number:</label><br>
-                  <input type="text" id="newPhoneNum" name="newPhoneNum"><br>
-                  <label for="confirmNum">Confirm new Phone Number:</label><br>
-                  <input type="text" id="confirmNum" name="confirmNum"><br><br>
-                  <button id="done" class="button-general" type="submit" name="register">Done</button>
+                  <div>
+                      <label for="">Enter your new Phone Number:</label><br>
+                      <input type="text" id="newPhoneNum" name="new_phonenum">
+                  </div>
+                  <div>
+                      <span class="error"><?php echo $new_phonenum_error; ?></span>
+                  </div>
+                  <div>
+                      <label for="">Confirm new Phone Number:</label><br>
+                      <input type="text" id="confirmNum" name="confirm_phonenum">
+                  </div>
+                  <div>
+                      <span class="error"><?php echo $confirm_phonenum_error; ?></span>
+                  </div><br>
+                  <button id="done" class="button-general" type="submit" name="phoneSubmit">Done</button>
               </div>
           </form>
           
-          <form id="changeEmail" style="display:none">
+          
+          <form id="changeEmail" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" style="display:none">
               <div id="newForm">
-                  <label for="newNum">Enter your new Email Address:</label><br>
-                  <input type="text" id="newEmail" name="newEmail"><br>
-                  <label for="confirmNum">Confirm new Email Address:</label><br>
-                  <input type="text" id="confirmEmail" name="confirmEmail"><br><br>
-                  <button id="done" class="button-general" type="submit" name="register">Done</button>
+                  <div>
+                      <label for="newNum">Enter your new Email Address:</label><br>
+                      <input type="text" id="newEmail" name="new_email">
+                  </div>
+                  <div>
+                      <span class="error"><?php echo $new_email_error; ?></span>
+                  </div>
+                  <div>
+                      <label for="confirmNum">Confirm new Email Address:</label><br>
+                      <input type="text" id="confirmEmail" name="confirm_email">
+                  </div>
+                  <div>
+                      <span class="error"><?php echo $confirm_email_error; ?></span>
+                  </div><br>
+                  <button id="done" class="button-general" type="submit" name="emailSubmit">Done</button>
               </div>
           </form>
           
-          <form id="changePassword" style="display:none">
+          <form id="changePassword" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" style="display:none">
               <div id="newForm">
-                  <label for="newNum">Enter your current Password:</label><br>
-                  <input type="text" id="oldPassword" name="oldPassword"><br>
-                  <label for="newNum">Enter new Password:</label><br>
-                  <input type="text" id="newPassword" name="newPassword"><br>
-                  <label for="confirmNum">Confirm new Password:</label><br>
-                  <input type="text" id="confirmPassword" name="confirmPassword"><br><br>
-                  <button id="done" class="button-general" type="submit" name="register">Done</button>
+                  <div>
+                      <label for="newNum">Enter your current Password:</label><br>
+                      <input type="text" id="oldPassword" name="current_password">
+                  </div>
+                  <div>
+                      <span class="error"><?php echo $current_password_error; ?></span>
+                  </div>
+                  <div>
+                      <label for="newNum">Enter new Password:</label><br>
+                      <input type="text" id="newPassword" name="new_password">
+                  </div>
+                  <div>
+                      <span class="error"><?php echo $new_password_error; ?></span>
+                  </div>
+                  <div>
+                      <label for="confirmNum">Confirm new Password:</label><br>
+                      <input type="text" id="confirmPassword" name="confirm_password">
+                  </div>
+                  <div>
+                      <span class="error"><?php echo $confirm_password_error; ?></span>
+                  </div><br>
+                  <button id="done" class="button-general" type="submit" name="passwordSubmit">Done</button>
               </div>
           </form>
           
