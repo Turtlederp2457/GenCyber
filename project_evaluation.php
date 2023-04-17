@@ -4,6 +4,7 @@ if(isset($_POST['logout'])){
 	include "logout.php";
 }
 session_start();
+require_once("database_conn.php");
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -183,13 +184,48 @@ a.button-prior {
   font-size: 1.2em;
   padding-bottom: 3px;
 }
+
+#squares div {
+    /* these styles will let the divs line up next to each other
+       while accepting dimensions */
+    display: block;
+    float: left;
+
+    width: 350px;
+    height: 600px;
+
+
+    /* a small margin to separate the blocks */
+    margin-right: 5px;
+}
+#BluePanel {  
+    background: rgb(51, 153, 255);
+    padding: 25px 40px 75px;
+}
 </style>
 <body>
   <header>
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
+      <p>
+      <?php
+      $sql = "SELECT First_name FROM Judges WHERE UserID = " . $_SESSION['UserID'];
+      $result = mysqli_query($connection, $sql);
+
+      if (mysqli_num_rows($result) > 0) {
+          // Save row data to variable
+          $row = mysqli_fetch_assoc($result);
+          // Print row data for testing
+          echo "Welcome, " . $row["First_name"];
+          //print_r($row);
+      } else {
+          echo "No rows found";
+      }
+
+      mysqli_close($connection);
+      ?>
+      </p>
     </form>
   </header>
   <div class="wrapper-logos">
@@ -210,21 +246,26 @@ a.button-prior {
 <!--   </div> -->
   <div class="wrapper-judge-links">
     <a class="button-prior" href="http://localhost/GenCyber/judge_profile_management.php">Profile Management</a>
-    <a class="button-prior" href="http://localhost/GenCyber/project_evaluation.php">Project Evaluation</a>
+    <a class="button-prior" style="background-color:#F0F0F0"; href="http://localhost/GenCyber/project_evaluation.php">Project Evaluation</a>
   </div>
-  <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
+<!-- Side Panel -->
+  <div style="font-size:1.0em; min-height:60vh; text-align:right;" class="wrapper-main">
     <div style="margin:0">
-	  <p class="error">This is my judge->project evaluation page template</p>
+	  <div id="squares">
+              <div id="BluePanel">
+                  <h3><strong>Needs Evaluated:</strong></h3><br>
+                  <button class="button-prior" style="background-color: #F0F0F0; font-size: 1.0em;">Unevaluated Projects</button><br><br>
+                  <h3><strong>Already Evaluated:</strong></h3><br>
+                <button class="button-prior" style="background-color: #F0F0F0; font-size: 1.0em;">Evaluated Projects</button>
+              </div>
+        </div>
     </div>
-    <div></div>
-    <div>
-      <p>
-        To Do List:<br>
-		1. Project Evaluation page will display two list of project: <br>
-		  (1) a list of active projects which was not evaluated yet with download button and evaluation button to put scores and comments for different criteria. <br>
-		  (2) a list of evaluated project which was already evaluated but can be edited. <br>
-      </p>
-    </div>
+      <div>
+          <div id="tip">
+              📝️ View assigned projects with the buttons on the left.
+          </div>
+      </div>
+    
   </div>
   <div class="wrapper-footer">
     <div>Date Created</div>
