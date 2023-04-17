@@ -241,3 +241,30 @@ a.button-prior {
 </body>
 </html>
 
+<?php
+// Project management page will display all projects (teacher may manage multiple student teams/projects) 
+// with Add new project button and Teacher can edit projects until due date.
+
+// Get all projects from the database 
+$query = "SELECT * FROM projects";
+$result = mysqli_query($conn, $query);
+
+// Display all projects
+if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+        echo "Project Title: " . $row["title"]. " - Short Description: " . $row["short_desc"]. " - Students: " . $row["student_name"]. " and " . $row["student_email"]. "<br>";
+    }
+} else {
+    echo "0 results";
+}
+
+// Create button to add new project
+echo "<button type='button' onclick='location.href='add-project.php''>Add New Project</button>";
+
+// Create button to edit project
+echo "<button type='button' onclick='location.href='edit-project.php''>Edit Project</button>";
+
+?>
+
+
+
