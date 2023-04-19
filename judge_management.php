@@ -68,19 +68,46 @@ if (isset($_POST['activate'])) {
   }
 }
 
-/* Here we will assign judges to selected projects
- * Projects selected from dropdown menu
+/* Here we will retrieve the values of selected judge
+ * Then we will set values to be generated in our popup form
  */
 if (isset($_POST['assign_judge'])) {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_email = $_POST['assign_judge'];
-    $review_query = "call MakeReview(?, ?)";
-    $stmt = mysqli_prepare($connection, $review_query);
-    $stmt->bind_param("ss", $ProjectID, $JudgeID);
-    $stmt->execute();
-    $stmt->close();
+    $query = "SELECT Users.user_email, Judges.First_name, Judges.Last_name ".
+      "FROM Users inner join Judges on Users.UserID = Judges.UserID ".
+      "WHERE Users.user_email = '{$user_email}'";
+    $result = mysqli_query($connection, $query);
+    $judge = mysqli_fetch_assoc($result);
+    $judge_first_name = $judge['First_name'];
+    $judge_last_name = $judge['Last_name'];
+//     $review_query = "call MakeReview(?, ?)";
+//     $stmt = mysqli_prepare($connection, $review_query);
+//     $stmt->bind_param("ss", $ProjectID, $JudgeID);
+//     $stmt->execute();
+//     $stmt->close();
+
   }
 }
+
+function clearStoredResults($mysqli_link){
+  while($mysqli_link->next_result()){
+    if($l_result = $mysqli_link->store_result()){
+      $l_result->free();
+    }
+  }
+}
+
+// $EventID = 2020;//Temp value until we set current event through some other script
+// $projectQuery = "call AllProjects('{$EventID}')";
+// $result = mysqli_query($connection, $projectQuery);
+
+// while($row=mysqli_fetch_assoc($result)){
+//     foreach ($row as $key => $field){
+//         echo $field;
+//     }
+// }
+                     
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -265,6 +292,21 @@ a.button-prior {
 table, th, td {
   border: 1px solid;
 }
+
+#assign_judge_form {
+  background: #B0B0B0;
+  border: 3px solid green;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  min-height: 50vh;
+  min-width: 75vh;
+  grid-template-columns: repeat(3, [col-start] 1fr);
+/*   grid-template-rows: repeat(4, [row-start] 1fr); */
+}
+
 </style>
 <body>
   <header>
@@ -293,7 +335,7 @@ table, th, td {
   </div>
   <div style="margin-top:10px; font-size:1.0em">
     <button id="create_judge_btn">Create New Judge</button>
-      <form style="all:revert;display:none" method="post" id="judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
+      <form style="all:revert;display:none" method="post" id="create_judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
         <label for="">First Name</label>
         <input type="text" name="first_name" placeholder="First Name" required> <br>
         <label for="">Last Name</label>
@@ -310,8 +352,9 @@ table, th, td {
         <input type="text" name="company_role" placeholder="Company Role" required> <br>
         <button type="submit" name="submit_judge">Submit</button>
       </form>
-    <script src="index.js"></script>
   </div>
+<!--   This is our judge creation script -->
+  <script src="create_judge.txt"></script>
   <div style="margin-top:20px;min-height:30vh">
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Active Judges</h2>
@@ -324,31 +367,53 @@ table, th, td {
           <th>Assign to Project</th>
         </tr>
         <?php
-          $result = mysqli_query($connection,"call AllActiveJudges()");
+          $result = mysqli_query($connection,"call AllActiveJudges()", MYSQLI_STORE_RESULT);
           while($row=mysqli_fetch_assoc($result)){?>
-          <tr><?php 
-          foreach($row as $key => $field)
-          	echo '<td>' . htmlspecialchars($field) . '</td>';?>
-            <td><button style="all:revert; background-color:red; width: 100%;" type="submit" name="deactivate" value="<?=$row['user_email']?>">Deactivate</button></td>
-            <td>
-              <div>
-<!--               Need to populate project_selection using query to pull all active projects -->
-          	    <select name="project_selection">
-                  <option value="">Select a Project</option>
-                  <?php 
-                  $EventID = 2020;//Temp value until we set current event through some other script
-                      $projectQuery = "call AllProjects('{$EventID}')";
-                      $result = mysqli_query($connection, $projectQuery);
-                  ?>
-                  <option value="project1">Project 1</option>
-            	    <option value="project2">Project 2</option>
-          	    </select>
-          	    <button style="all:revert" type="submit" name="assign_judge" value="<?=$row['user_email']?>">Assign</button>
-      		  </div>
-      		</td>
-          </tr>
+            <tr><?php
+            foreach($row as $key => $field)
+          	  echo '<td>' . htmlspecialchars($field) . '</td>';?>
+              <td><button style="all:revert; background-color:red; width: 100%;" type="submit" name="deactivate" value="<?=$row['user_email']?>">Deactivate</button></td>
+			  <?php /*clearStoredResults($connection);*/?>
+              <td>
+<!--                 <div> -->
+<!--                     <select> -->
+<!--                       <option>Select a Project</option> -->
+<!--                       <option>option 1</option> -->
+<!--                     </select> -->
+  				    <button style="all:revert" id="assign_judge_btn" type="submit" name="assign_judge" value="<?=$row['user_email'];?>">Assign</button>        
+<!--       		    </div> -->
+      		  </td>
+            </tr>
         <?php }?>
       </table> 
+    </form>    
+  </div>
+  <?php /*$connection->next_result();*/  clearStoredResults($connection);?>   
+  <div id="assign_popup_form" style="display:block">
+    <form method="post" id="assign_judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
+      <label style="margin-top:0" type="text" name="first_name"><?php if(isset($_POST['assign_judge'])){echo $judge_first_name;} else {echo "First Name";}?></label>
+      <label style="margin-top:0" type="text" name="last_name"><?php if(isset($_POST['assign_judge'])){echo $judge_last_name;} else {echo "Last Name";}?></label>
+<!--       Here we need to pull project data to get description based on selection -->
+      <?php
+        $eventID = 1;
+        $query = "SELECT ProjectID, Title, Description FROM Projects WHERE EventID = '{$eventID}'";
+        $result = mysqli_query($connection, $query);?>
+        <select style="height:50%">
+          <option value="">Select a Project</option>
+        <?php while($project = mysqli_fetch_assoc($result)){
+          foreach ($project as $key => $field)
+            $proj_desc = $project['Description'];
+            $proj_id = $project['ProjectID'];
+            $proj_title = $project['Title'];
+            echo '<option value="$proj_id">' . $proj_id . ". " . $proj_title . '</option>';
+        }?>
+        </select>
+      <label type="text" name="proj_title">Title:</label>
+      <div style="width:100%"><?php echo $proj_title;?></div>
+      <div></div>
+      <label type="text" name="proj_desc">Description:</label>
+      <div style="width:100%"><?php echo $proj_desc;?></div>
+      <button style="all:revert; background-color:green; width: 100%; height:20%; bottom:0; position:absolute" type="submit" name="submit_assign" value="<??>">Submit</button>
     </form>
   </div>
   <div style="margin-top:20px;min-height:30vh">
@@ -359,15 +424,16 @@ table, th, td {
           <th>User Email</th>
           <th>First Name</th>
           <th>Last Name</th>
-          <th>Deactivate</th>
+          <th>Activate</th>
         </tr>
-        <?php
-          $result = mysqli_query($connection, "call AllInactiveJudges()");
+        <?php     
+          $result = mysqli_query($connection, "call GetInactiveJudges()");
           while($row=mysqli_fetch_assoc($result)){?>
           <tr><?php 
           foreach($row as $key => $field)
           	echo '<td>' . htmlspecialchars($field) . '</td>';?>
             <td><button style="all:revert; background-color:green; width:100%" type="submit" name="activate" value="<?=$row['user_email']?>">Activate</button></td>
+            
           </tr>
           <?php }?>
       </table> 
@@ -377,6 +443,7 @@ table, th, td {
     <p>
         To Do List:<br>
      	1. Assign Judges to project(s) <br>
+     	1a. Attempting to create a separate popup form pre-filled with chosen judges' info when assign button is clicked<br>
       </p>
   </div>
   <div class="wrapper-footer">
