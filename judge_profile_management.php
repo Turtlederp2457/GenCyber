@@ -237,7 +237,7 @@ if (isset($_POST['passwordSubmit'])) {
 <meta name="sitePath" content="http://localhost/GenCyber/judge_profile_management.php" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
 <!-- Add your name here one you have helped write this code -->
-<meta name="author" content="Gatlin Zornes">
+<meta name="author" content="Gatlin Zornes, Layne McNeely">
 <title>Profile Management - Marshall University GenCyber</title>
 <!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/newHome_stylesheet.css" />  -->
 <!-- Might need this -->
@@ -489,7 +489,7 @@ a.button-prior {
       <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
         style="height:100px;width:120px" alt="Marshall University logo" class="marshall-logo"/>
     </a>
-    <a style="color:white" class="better-title center" href="http://localhost/GenCyber/newHome.php">Marshall University GenCyber</a>
+    <a style="color:white" class="better-title center" href="http://localhost/GenCyber/judge_landing.php">Marshall University GenCyber</a>
     <a class="center" target="_blank" href="https://www.gen-cyber.com/">
       <img src="https://www.gen-cyber.com/static/gencyber_public_web/img/gencyber-logo-small.png" 
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>

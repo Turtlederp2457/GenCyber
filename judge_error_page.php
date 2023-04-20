@@ -14,7 +14,7 @@ require_once("database_conn.php");
 <meta name="sitePath" content="http://localhost/GenCyber/judge_landing.php" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
 <!-- Add your name here one you have helped write this code -->
-<meta name="author" content="Gatlin Zornes">
+<meta name="author" content="Gatlin Zornes, Layne McNeely">
 <title>Judge - Marshall University GenCyber</title>
 <!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/newHome_stylesheet.css" />  -->
 <!-- Might need this -->
@@ -239,8 +239,9 @@ a.button-prior {
             printf("Sorry, 👨‍⚖ " . $row["First_name"]);
             ?>.<br><br>
             <p class="error">Something went wrong when updating your profile.<br>
-                &emsp;- Make sure the information you entered is correct<br></p>
-            <br><p>Click <a href="http://localhost/GenCyber/judge_profile_management.php">here</a> to go back to Profile Management.</p>
+                &emsp;- Make sure the information you entered is correct<br>
+                &emsp;- Something may have gone wrong with the server<br></p>
+            <br><p>Click <a href="http://localhost/GenCyber/judge_landing.php">here</a> to go back to the Homepage.</p>
             <!--Hey👋, 👨‍⚖!-->
         </center>
     </div>

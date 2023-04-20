@@ -11,19 +11,11 @@ require_once("database_conn.php");
 <head>
     <!-- Required meta tags --> 
     <meta charset = "utf-8"/>
-    <meta name="sitePath" content="http://localhost/GenCyber/judge_landing.php" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
-    <!-- Add your name here one you have helped write this code -->
-    <!doctype html>
-<html lang="en-us" class="scroll-smooth"/>
-<head>
-    <!-- Required meta tags --> 
-    <meta charset = "utf-8"/>
-    <meta name="sitePath" content="http://localhost/GenCyber/judge_landing.php" />
+    <meta name="sitePath" content="http://localhost/GenCyber/judge_management.php" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
     <!-- Add your name here one you have helped write this code -->
     <meta name="author" content="Gatlin Zornes, Layne McNeely">
-    <title>Judge - Marshall University GenCyber</title>
+    <title>Judge Management - Marshall University GenCyber</title>
     <!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/newHome_stylesheet.css" />  -->
     <!-- Might need this -->
     <!-- <base href="http://localhost/GenCyber/" target="_self"> -->
@@ -48,12 +40,13 @@ require_once("database_conn.php");
         form {
             display: grid;
             margin-bottom: 0;
-            grid-template-columns: 25% 50% 25%;
+            grid-template-columns: 25% 35% 25%;
         }
 
         form p, div, span, label {
-            font-size: 1.2em;
+            font-size: 1.0em;
             margin: auto;
+            padding-bottom: 10px;
         }
 
         button[type=submit] {
@@ -104,7 +97,7 @@ require_once("database_conn.php");
         }
 
         .button-general {
-            width: 50%;
+            width: 100px;
             height: 100%;
             background-color: rgb(51, 153, 255);
             font: caption;
@@ -168,10 +161,15 @@ require_once("database_conn.php");
             color: initial;
         }
 
-        .wrapper-judge-links {
+        .wrapper-review-links {
             display: grid;
-            grid-template-columns: repeat(2, [col-start] 1fr);
-            border: 1px solid black;
+            grid-template-columns: repeat(5, [col-start] 1fr);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 90px;   /* Height of the footer */
+            background: none;
+            padding-bottom: 15px;
         }
 
         .wrapper-main {
@@ -191,30 +189,27 @@ require_once("database_conn.php");
             font-size: 1.2em;
             padding-bottom: 3px;
         }
+
+        table, th, td {
+            border: 1px solid;
+        }
     </style>
 <body>
     <header>
-        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-            <button class="button-general" type="submit" name="logout">Log Out</button>
+        <form>
+            <!--<button class="button-general" type="submit" name="logout">Log Out</button>-->
             <div></div>
-            <p>
-                <?php
-                $sql = "SELECT First_name FROM Judges WHERE UserID = " . $_SESSION['UserID'];
-                $result = mysqli_query($connection, $sql);
-                
-                if (mysqli_num_rows($result) > 0) {
+            <div></div>
+            <p><?php
+                $getJudgeID = "SELECT JudgeID FROM Judges WHERE UserID = " . $_SESSION['UserID'];
+                $res = mysqli_query($connection, $getJudgeID);
+                if (mysqli_num_rows($res) > 0) {
                     // Save row data to variable
-                    $row = mysqli_fetch_assoc($result);
-                    // Print row data for testing
-                    echo "Welcome, " . $row["First_name"];
-                    //print_r($row);
+                    $rid = mysqli_fetch_assoc($res);
                 } else {
                     echo "No rows found";
                 }
-                
-                //mysqli_close($connection);
-                ?>
-            </p>
+                ?></p>
         </form>
     </header>
     <div class="wrapper-logos">
@@ -228,60 +223,40 @@ require_once("database_conn.php");
                  style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
         </a>
     </div>
-    <!--   <div class="wrapper-menu"> -->
-    <!--     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a> -->
-    <!--     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a> -->
-    <!--     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
-    <!--   </div> -->
-    <div class="wrapper-judge-links">
-        <a class="button-prior" href="http://localhost/GenCyber/judge_profile_management.php">Profile Management</a>
-        <a class="button-prior" href="http://localhost/GenCyber/project_evaluation.php">Project Evaluation</a>
-    </div>
-    <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-        <div style="margin:0">
-            <!--Left panel-->
-        </div>
-        <div style="font-size:24px; min-height:60vh;">
-            <center>
+    <div style="margin-top:30px; margin-left: 10px">
+        <center>
+            <h2><?php printf("Review Form, Project " . $_SESSION['ProjectID']); ?></h2><br>
+            <table>
+                <tr>
+                    <th>Category</th>
+                    <th>Score</th>
+                    <th>Comment</th>
+                </tr>
                 <?php
-                printf("Hey👋, 👨‍⚖ " . $row["First_name"]);
-                
-                //Get JudgeID
-                $getJudgeID = "SELECT JudgeID FROM Judges WHERE UserID = ". $_SESSION['UserID'];
-                $res = mysqli_query($connection, $getJudgeID);
-                if (mysqli_num_rows($res) > 0) {
+                $sql = "SELECT Completeness_score, Completeness_comment, Originality_score, Originality_comment, Creativity_score, Creativity_comment, Clarity_score, Clarity_comment, Explanation_score, Explanation_comment "
+                        . "FROM Reviews WHERE ProjectID = " . $_SESSION['ProjectID'] . " and JudgeID = " . $rid['JudgeID'] . ";";
+                $result = mysqli_query($connection, $sql);
+
+                if (mysqli_num_rows($result) > 0) {
                     // Save row data to variable
-                    $rid = mysqli_fetch_assoc($res);
+                    $row = mysqli_fetch_assoc($result);
+                    // Print row data for testing
+                    echo "<tr><td>Completeness</td><td>" . $row["Completeness_score"] . "</td><td>" . $row["Completeness_comment"] . "</td></tr>"
+                    . "<tr><td>Originality</td><td>" . $row["Originality_score"] . "</td><td>" . $row["Originality_comment"] . "</td></tr>"
+                    . "<tr><td>Creativity</td><td>" . $row["Creativity_score"] . "</td><td>" . $row["Creativity_comment"] . "</td></tr>"
+                    . "<tr><td>Clarity</td><td>" . $row["Clarity_score"] . "</td><td>" . $row["Clarity_comment"] . "</td></tr>"
+                    . "<tr><td>Video Explanation</td><td>" . $row["Explanation_score"] . "</td><td>" . $row["Explanation_comment"] . "</td></tr>";
                 } else {
                     echo "No rows found";
                 }
-                
-                //Get # of unevaluated projects
-                $sql2 = "SELECT IsEvaluated FROM Reviews WHERE JudgeID = '". $rid["JudgeID"] ."' and IsEvaluated = 0";
-                if ($res = mysqli_query($connection, $sql2)) {
-                    // Return the number of rows in result set
-                    $rowcount = mysqli_num_rows($res);
-                }
+
                 mysqli_close($connection);
-                ?>!<br><br>
-                You have <b><?php echo $rowcount; ?></b> projects that need evaluating.<br>
-                Head over to Project Evaluation to get started.<br><br>
-                Use the two buttons above to <br>navigate the Judge Dashboard.
-                <!--Hey👋, 👨‍⚖!-->
-            </center>
+                ?>
+            </table>
+        </center>
+        <div style="width: 100%; display: table; position: fixed; bottom: 0; left: 20">
+            <div><button class="button-general" style="background-color: lightgray" type="button" name="cancel" onclick="window.location.href = 'project_evaluation.php';">Go Back</button></div>
         </div>
-        <div>
-            <!--Right panel-->
-        </div>
-    </div>
-    <div class="wrapper-footer">
-        <div>Date Created</div>
-        <div>Copyright</div>
-        <div>Contact Email</div>
-        <div>Address</div>
-        <!--     <a href="http://localhost/GenCyber/about/about.php">About</a> -->
-        <!--     <a href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
-        <!--     <a href="http://localhost/GenCyber/help/help.php">Help</a> -->
     </div>
 
 </body>
