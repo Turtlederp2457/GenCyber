@@ -6,6 +6,31 @@ if (isset($_POST['logout'])) {
 session_start();
 require_once("database_conn.php");
 
+if (isset($_POST['download'])) {
+    // Select the BLOB from the database
+    $sql = "SELECT AttachmentName, AttachmentType, AttachmentSize, Attachment FROM Attachments WHERE ProjectID = " . $_POST['download'];
+    $result = mysqli_query($connection, $sql);
+
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $filename = $row['AttachmentName'];
+        $filetype = $row['AttachmentType'];
+        $filesize = $row['AttachmentSize'];
+        $content = $row['Attachment'];
+
+        // Set the headers for downloading the file
+        header('Content-Type: application/octet-stream');
+        header("Content-Disposition: attachment; filename= Project " . $_POST['download'] . " ". $filename);
+
+        // Convert the BLOB to a DOCX file and output it to the user
+        echo $row['Attachment']; exit;
+    } else {
+        echo "Error: File not found.";
+    }
+
+    mysqli_close($connection);
+}
+
 if (isset($_POST['review'])) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ProjectID = $_POST['review'];
@@ -322,9 +347,9 @@ if (isset($_POST['viewreview'])) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         ?>
                         <tr><?php
-                            foreach ($row as $key => $field)
-                                echo '<td>' . htmlspecialchars($field) . '</td>';
-                            ?>
+                    foreach ($row as $key => $field)
+                        echo '<td>' . htmlspecialchars($field) . '</td>';
+                        ?>
                             <td><button style="all:revert; background-color:lightblue; width:100%" type="submit" name="download" value="<?= $row['ProjectID'] ?>">Download</button></td>
                             <td><button style="all:revert; background-color:lightgreen; width:100%" type="submit" name="review" value="<?= $row['ProjectID'] ?>">Review</button></td>
                         </tr>
@@ -352,9 +377,9 @@ if (isset($_POST['viewreview'])) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         ?>
                         <tr><?php
-                            foreach ($row as $key => $field)
-                                echo '<td>' . htmlspecialchars($field) . '</td>';
-                            ?>
+                    foreach ($row as $key => $field)
+                        echo '<td>' . htmlspecialchars($field) . '</td>';
+                        ?>
                             <td><button style="all:revert; background-color:lightgray; width:100%" type="submit" name="viewreview" value="<?= $row['ProjectID'] ?>">View Review</button></td>
                         </tr>
                         <?php
