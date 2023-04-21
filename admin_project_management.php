@@ -184,6 +184,11 @@ a.button-prior {
   font-size: 1.2em;
   padding-bottom: 3px;
 }
+
+table, th, td {
+  border: 1px solid;
+}
+
 </style>
 <body>
   <header>
@@ -216,19 +221,38 @@ a.button-prior {
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div style="margin:0">
-      <p class="error">This is my admin->proj_mgmt page template</p>
-    </div>
     <div>
       <h2>Current Projects</h2>
     </div>
     <div>
+      <table>
+        <tr>
+          <th>Project ID</th>
+          <th>Project Title</th>
+          <th>Project Description</th>
+          <th>Download</th>
+          <th>Archive</th>
+        </tr>
+      <?php 
+        $eventID = 1;
+        $query = "SELECT ProjectID, Title, Description FROM Projects WHERE EventID = '{$eventID}'";
+        $result = mysqli_query($connection, $query);
+        while($row=mysqli_fetch_assoc($result)){?>
+            <tr><?php
+            foreach($row as $key => $field)
+          	  echo '<td>' . htmlspecialchars($field) . '</td>';?>
+              <td><button style="all:revert; background-color:green; color: white; width: 100%;" type="submit" name="download" value="<?=$row['ProjectID']?>">Download</button></td>
+              <td><button style="all:revert; background-color:purple; color: white; width: 100%;" type="submit" name="archive" value="<?=$row['ProjectID']?>">Archive</button></td>
+            </tr>
+        <?php }?>
+      </table>
+    </div>
+    <div>
       <p>
         To Do List:<br>
-        1. Show the list of the projects created by teachers. <br>
-		2. Download project content upon completion/submission <br>
-        3. Reactivate Event button <br>
-        4. The project can be archived by admin for the next round of competition. <br>
+		1. Download project content upon completion/submission <br>
+        2. Reactivate Event button <br>
+        3. The project can be archived by admin for the next round of competition. <br>
       </p>
     </div>
   </div>
