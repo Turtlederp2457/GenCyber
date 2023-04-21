@@ -188,7 +188,24 @@ a.button-prior {
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
+      <p>
+      <?php
+      $sql = "SELECT First_name FROM Teachers WHERE UserID = " . $_SESSION['UserID'];
+      $result = mysqli_query($connection, $sql);
+
+      if (mysqli_num_rows($result) > 0) {
+          // Save row data to variable
+          $row = mysqli_fetch_assoc($result);
+          // Print row data for testing
+          echo "Welcome, " . $row["First_name"];
+          //print_r($row);
+      } else {
+          echo "No rows found";
+      }
+      
+      mysqli_close($connection);
+      ?>
+      </p>
     </form>
   </header>
   <div class="wrapper-logos">
@@ -196,7 +213,7 @@ a.button-prior {
       <img src="//www.marshall.edu/gencyber/wp-content/themes/marsha/images/m_primary.svg" 
         style="height:100px;width:120px" alt="Marshall University logo" class="marshall-logo"/>
     </a>
-    <a style="color:white" class="better-title center" href="http://localhost/GenCyber/newHome.php">Marshall University GenCyber</a>
+    <a style="color:white" class="better-title center" href="http://localhost/GenCyber/teacher_landing.php">Marshall University GenCyber</a>
     <a class="center" target="_blank" href="https://www.gen-cyber.com/">
       <img src="https://www.gen-cyber.com/static/gencyber_public_web/img/gencyber-logo-small.png" 
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
@@ -209,11 +226,10 @@ a.button-prior {
 <!--   </div> -->
   <div class="wrapper-teacher-links">
     <a class="button-prior" href="http://localhost/GenCyber/teacher_profile_management.php">Profile Management</a>
-    <a class="button-prior" href="http://localhost/GenCyber/teacher_project_management.php">Project Management</a>
+    <a class="button-prior" style="background-color:#F0F0F0" href="http://localhost/GenCyber/teacher_project_management.php">Project Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
     <div style="margin:0">
-	  <p class="error">This is my teacher->project mgmt page template</p>
 	  <button class="button-prior">Add New Project</button>
     </div>
     <div>
