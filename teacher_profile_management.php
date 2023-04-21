@@ -441,7 +441,7 @@ a.button-prior {
 <!--   </div> -->
   <div class="wrapper-teacher-links">
     <a class="button-prior" style="background-color:#F0F0F0"; href="http://localhost/GenCyber/teacher_profile_management.php">Profile Management</a>
-    <a class="button-prior" href="http://localhost/GenCyber/project_evaluation.php">Project Evaluation</a>
+    <a class="button-prior" href="http://localhost/GenCyber/teacher_project_management.php">Project Management</a>
   </div>
 <!-- Side Panel -->
   <div style="font-size:1.0em; min-height:60vh; text-align:right;" class="wrapper-main">
