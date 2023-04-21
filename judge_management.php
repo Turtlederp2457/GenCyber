@@ -90,6 +90,11 @@ if (isset($_POST['assign_judge'])) {
   }
 }
 
+if (isset($_POST['confirm_assign'])){
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+  }
+}
 function clearStoredResults($mysqli_link){
   while($mysqli_link->next_result()){
     if($l_result = $mysqli_link->store_result()){
@@ -293,17 +298,19 @@ table, th, td {
   border: 1px solid;
 }
 
-#assign_judge_form {
+#assign_popup_div{
+  width: 50%;
   background: #B0B0B0;
   border: 3px solid green;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-  min-height: 50vh;
-  min-width: 75vh;
-  grid-template-columns: repeat(3, [col-start] 1fr);
+  grid-template-columns: repeat(2, [col-start] 1fr);
+/* the commented lines were used to make a form centered on window/screen  */
+/*   position: absolute; */ 
+/*   top: 50%; */ 
+/*   left: 50%; * */
+/*    margin-right: -50%; */ 
+/*    transform: translate(-50%, -50%); */ 
+/*    min-height: 50vh; */ 
+/*    min-width: 75vh; */ 
 /*   grid-template-rows: repeat(4, [row-start] 1fr); */
 }
 
@@ -354,7 +361,7 @@ table, th, td {
       </form>
   </div>
 <!--   This is our judge creation script -->
-  <script src="create_judge.txt"></script>
+  <script src="create_judge.js"></script>
   <div style="margin-top:20px;min-height:30vh">
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Active Judges</h2>
@@ -373,47 +380,32 @@ table, th, td {
             foreach($row as $key => $field)
           	  echo '<td>' . htmlspecialchars($field) . '</td>';?>
               <td><button style="all:revert; background-color:red; width: 100%;" type="submit" name="deactivate" value="<?=$row['user_email']?>">Deactivate</button></td>
-			  <?php /*clearStoredResults($connection);*/?>
               <td>
-<!--                 <div> -->
-<!--                     <select> -->
-<!--                       <option>Select a Project</option> -->
-<!--                       <option>option 1</option> -->
-<!--                     </select> -->
-  				    <button style="all:revert" id="assign_judge_btn" type="submit" name="assign_judge" value="<?=$row['user_email'];?>">Assign</button>        
-<!--       		    </div> -->
+  			    <button style="all:revert; width:100%" id="assign_judge_btn" name="assign_judge" type="submit" value="<?=$row['user_email'];?>">Assign</button>        
       		  </td>
             </tr>
         <?php }?>
       </table> 
     </form>    
   </div>
-  <?php /*$connection->next_result();*/  clearStoredResults($connection);?>   
-  <div id="assign_popup_form" style="display:block">
-    <form method="post" id="assign_judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
+  <?php clearStoredResults($connection);?>   
+  <center><strong>need to set value for submit to retrieve for query</strong></center>
+  <div id="assign_popup_div" style="display:block">
+    <form style="grid-template-columns: repeat(2, [col-start] 1fr)" method="post" id="assign_judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <label style="margin-top:0" type="text" name="first_name"><?php if(isset($_POST['assign_judge'])){echo $judge_first_name;} else {echo "First Name";}?></label>
       <label style="margin-top:0" type="text" name="last_name"><?php if(isset($_POST['assign_judge'])){echo $judge_last_name;} else {echo "Last Name";}?></label>
-<!--       Here we need to pull project data to get description based on selection -->
       <?php
         $eventID = 1;
         $query = "SELECT ProjectID, Title, Description FROM Projects WHERE EventID = '{$eventID}'";
         $result = mysqli_query($connection, $query);?>
         <select style="height:50%">
-          <option value="">Select a Project</option>
-        <?php while($project = mysqli_fetch_assoc($result)){
-          foreach ($project as $key => $field)
-            $proj_desc = $project['Description'];
-            $proj_id = $project['ProjectID'];
-            $proj_title = $project['Title'];
-            echo '<option value="$proj_id">' . $proj_id . ". " . $proj_title . '</option>';
-        }?>
+          <option value="" selected>Select a Project</option>
+	   <?php 
+        while($projects = mysqli_fetch_assoc($result)){?>
+            <option value="<?=$projects['ProjectID']?>"><?php echo $projects['ProjectID'] . ". " . $projects['Title'];?></option> 
+        <?php }?>
         </select>
-      <label type="text" name="proj_title">Title:</label>
-      <div style="width:100%"><?php echo $proj_title;?></div>
-      <div></div>
-      <label type="text" name="proj_desc">Description:</label>
-      <div style="width:100%"><?php echo $proj_desc;?></div>
-      <button style="all:revert; background-color:green; width: 100%; height:20%; bottom:0; position:absolute" type="submit" name="submit_assign" value="<??>">Submit</button>
+      <button style="all:revert; background-color:green; width: 100%; height:100%;" onclick="alert(this.value)" type="submit" name="confirm_assign" value="<?=$projects['ProjectID']?>">Submit</button>
     </form>
   </div>
   <div style="margin-top:20px;min-height:30vh">
@@ -455,8 +447,5 @@ table, th, td {
 <!--     <a href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
 <!--     <a href="http://localhost/GenCyber/help/help.php">Help</a> -->
   </div>
-<!--   This is the script to hide/display our judge entry form -->
-  <script type="text/javascript">
-  </script>
 </body>
 </html>
