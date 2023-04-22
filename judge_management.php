@@ -4,6 +4,7 @@ if(isset($_POST['logout'])) {
   include "logout.php";
 }
 session_start();
+$judge_id = "";
 /*
  * This is where we will begin our query to insert
  * judge values into judges_tbl
@@ -74,13 +75,14 @@ if (isset($_POST['activate'])) {
 if (isset($_POST['assign_judge'])) {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_email = $_POST['assign_judge'];
-    $query = "SELECT Users.user_email, Judges.First_name, Judges.Last_name ".
+    $query = "SELECT Users.UserID, Users.user_email, Judges.First_name, Judges.Last_name ".
       "FROM Users inner join Judges on Users.UserID = Judges.UserID ".
       "WHERE Users.user_email = '{$user_email}'";
     $result = mysqli_query($connection, $query);
     $judge = mysqli_fetch_assoc($result);
     $judge_first_name = $judge['First_name'];
     $judge_last_name = $judge['Last_name'];
+    $judge_id = $judge['UserID'];
 //     $review_query = "call MakeReview(?, ?)";
 //     $stmt = mysqli_prepare($connection, $review_query);
 //     $stmt->bind_param("ss", $ProjectID, $JudgeID);
@@ -90,9 +92,17 @@ if (isset($_POST['assign_judge'])) {
   }
 }
 
-if (isset($_POST['confirm_assign'])){
+if (isset($_POST['submit_assign'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
+//     var_dump($_POST);
+    $projectID = $_POST['submit_assign'];
+    $judgeID = $_POST['submit_assign'];
+    echo "this is proj ID: " .$projectID . "this is judge ID: " . $judge_id;
+//     $review_query = "call MakeReview(?, ?)";
+//     $stmt = mysqli_prepare($connection, $review_query);
+//     $stmt->bind_param("ss", $ProjectID, $JudgeID);
+//     $stmt->execute();
+//     $stmt->close();
   }
 }
 function clearStoredResults($mysqli_link){
@@ -101,18 +111,7 @@ function clearStoredResults($mysqli_link){
       $l_result->free();
     }
   }
-}
-
-// $EventID = 2020;//Temp value until we set current event through some other script
-// $projectQuery = "call AllProjects('{$EventID}')";
-// $result = mysqli_query($connection, $projectQuery);
-
-// while($row=mysqli_fetch_assoc($result)){
-//     foreach ($row as $key => $field){
-//         echo $field;
-//     }
-// }
-                     
+}                     
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -298,7 +297,7 @@ table, th, td {
   border: 1px solid;
 }
 
-#assign_popup_div{
+#assign_judge_div{
   width: 50%;
   background: #B0B0B0;
   border: 3px solid green;
@@ -314,6 +313,12 @@ table, th, td {
 /*   grid-template-rows: repeat(4, [row-start] 1fr); */
 }
 
+#submit_assign {
+  all:revert; 
+  background-color:green; 
+  width: 100%; 
+  height:100%;
+}
 </style>
 <body>
   <header>
@@ -390,7 +395,7 @@ table, th, td {
   </div>
   <?php clearStoredResults($connection);?>   
   <center><strong>need to set value for submit to retrieve for query</strong></center>
-  <div id="assign_popup_div" style="display:block">
+  <div id="assign_judge_div" style="display:block">
     <form style="grid-template-columns: repeat(2, [col-start] 1fr)" method="post" id="assign_judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <label style="margin-top:0" type="text" name="first_name"><?php if(isset($_POST['assign_judge'])){echo $judge_first_name;} else {echo "First Name";}?></label>
       <label style="margin-top:0" type="text" name="last_name"><?php if(isset($_POST['assign_judge'])){echo $judge_last_name;} else {echo "Last Name";}?></label>
@@ -398,16 +403,33 @@ table, th, td {
         $eventID = 1;
         $query = "SELECT ProjectID, Title, Description FROM Projects WHERE EventID = '{$eventID}'";
         $result = mysqli_query($connection, $query);?>
-        <select style="height:50%">
+<!--         add onChange="alert(this.value)" to <select> to verify pID -->
+        <select id="proj_dropdown" style="height:50%">
           <option value="" selected>Select a Project</option>
 	   <?php 
         while($projects = mysqli_fetch_assoc($result)){?>
-            <option value="<?=$projects['ProjectID']?>"><?php echo $projects['ProjectID'] . ". " . $projects['Title'];?></option> 
+            <option name="project" value="<?=$projects['ProjectID']?>"><?php echo $projects['ProjectID'] . ". " . $projects['Title'];?></option> 
         <?php }?>
         </select>
-      <button style="all:revert; background-color:green; width: 100%; height:100%;" onclick="alert(this.value)" type="submit" name="confirm_assign" value="<?=$projects['ProjectID']?>">Submit</button>
+      <button onclick="getValue()" value="<?=$projects['ProjectID']?>" data-value="<?=$judge_id?>" type="submit" id="submit_assign" name="submit_assign">Submit</button>
     </form>
   </div>
+<!--   this is our script to assign values to our select from chosen option -->
+  <script type="text/javascript">
+    var element = document.getElementById("proj_dropdown");
+    function onChange(){
+      var value = element.value();
+    }
+    element.onChange = onChange;
+    onChange();
+  </script>
+  <script type="text/javascript">
+    var submit = document.getElementById("submit_assign");
+    function getValue() {
+      var dV = submit.getAttribute("data-value");
+      alert("this is your selected judgeID: " + dV);
+    }
+  </script>
   <div style="margin-top:20px;min-height:30vh">
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Inactive Judges</h2>
