@@ -20,8 +20,23 @@ if (isset($_POST['addProject'])) {
     $title = test_input($_POST['title']);
     $description = test_input($_POST['description']);
     $sql = "INSERT INTO Projects (Title, Description, TeacherID, EventID) VALUES ('" . $title . "', '" . $description . "', " . $rid['TeacherID'] . ", 1)";
+    if(isset($_FILES['file'])) {
+        // Check if the file was uploaded without errors
+        if($_FILES['file']['error'] == 0) {
+            // Get the file name
+            $filename = $_FILES['file']['name'];
+            // Get the file size
+            $filesize = $_FILES['file']['size'];
+            // Get the temporary location of the file
+            $filetmp = $_FILES['file']['tmp_name'];
+            // Get the file type
+            $filetype = $_FILES['file']['type'];
+            //insert sql function to upload to sql server here
+
+        }
+    }
     if (mysqli_query($connection, $sql)) {
-        mysqli_close($connection);
+       mysqli_close($connection);
         header('location: teacher_project_management.php');
     } else {
         mysqli_close($connection);
@@ -304,12 +319,13 @@ if (isset($_POST['delete'])) {
             <div id="squares">
                 <div id="BluePanel">
                     <h3>Add New Project</h3><br>
-                    <form style="display: inline-block;" id="addProject" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                    <form style="display: inline-block;" id="addProject" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                         <label>Project Title</label><br>
                         <input type="text" name="title" placeholder="Title" size="40" required><br><br>
                         <label>Project Description</label><br>
                         <textarea style="resize: none;" name="description" placeholder="Short Description" cols="36" rows="6" required></textarea><br><br>
-                        <label>Upload File</label><br>
+                        <label for="file">Select a file to upload:</label>
+		                <input type="file" name="file" id="file"><br><br>
                         <br>
                         <button class="button-general" style="background-color: yellow; font-size: 1.0em; width: 260px;" type="submit" name="addProject">Add Project</button>
                     </form>
@@ -377,6 +393,3 @@ if (isset($_POST['delete'])) {
 // with Add new project button and Teacher can edit projects until due date.
 // Get all projects from the database 
 ?>
-
-
-
