@@ -22,9 +22,18 @@ if (isset($_POST['addProject'])) {
     $sql = "INSERT INTO Projects (Title, Description, TeacherID, EventID) VALUES ('" . $title . "', '" . $description . "', " . $rid['TeacherID'] . ", 1)";
 
     if (mysqli_query($connection, $sql)) {
+        //need to get projectID that was assigned
+        $stmt = mysqli_prepare($connection, "Select ProjectID from Projects where Title = ?");
+        mysqli_stmt_bind_param($stmt, "s", $title);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $row = mysqli_fetch_assoc($result);
+        $projectID = $row['ProjectID'];
         if(isset($_FILES['file'])) {
             // Check if the file was uploaded without errors
             if($_FILES['file']['error'] == 0) {
+                //Actual File
+                $file = $_FILES['file'];
                 // Get the file name
                 $filename = $_FILES['file']['name'];
                 // Get the file size
@@ -35,11 +44,11 @@ if (isset($_POST['addProject'])) {
                 $filetype = $_FILES['file']['type'];
                 $fileContent = file_get_contents($file['tmp_name']);
                 //insert sql function to upload to sql server here
-                $stmt = $conn->prepare("INSERT INTO Attachments (AttachmentName, ProjectID, AttachmentType, Attachment) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $fileName, $projectID, $fileType, $fileContent);
+                $stmt = mysqli_prepare($connection, "INSERT INTO Attachments (ProjectID, AttachmentName, AttachmentType, Attachment) VALUES (?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt, "isss", $projectID, $filename, $filetype, $fileContent);
                 $stmt->execute();
             }
-            }
+        }
        mysqli_close($connection);
         header('location: teacher_project_management.php');
     } else {
