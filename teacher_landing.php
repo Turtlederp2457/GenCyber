@@ -250,12 +250,6 @@ session_start();
                     echo "No rows found";
                 }
                 
-                //Get # of uploaded projects
-                $sql2 = "SELECT ProjectID FROM Projects WHERE TeacherID = '". $rid["TeacherID"] ."'";
-                if ($res = mysqli_query($connection, $sql2)) {
-                    // Return the number of rows in result set
-                    $rowcount = mysqli_num_rows($res);
-                }
                 //mysqli_close($connection);
                 ?>!<br><br>
                 <h3>Here's a look at your uploaded projects:</h3><br>

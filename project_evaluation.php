@@ -332,7 +332,7 @@ if (isset($_POST['viewreview'])) {
             <form id="eval" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="display:none">
                 <h2>Unevaluated Projects:</h2>
                 <table>
-                    <tr>
+                    <tr style="text-align: center;">
                         <th>Project #</th>
                         <th>Title</th>
                         <th>Description</th>
@@ -350,8 +350,8 @@ if (isset($_POST['viewreview'])) {
                     foreach ($row as $key => $field)
                         echo '<td>' . htmlspecialchars($field) . '</td>';
                         ?>
-                            <td><button style="all:revert; background-color:lightblue; width:100%" type="submit" name="download" value="<?= $row['ProjectID'] ?>">Download</button></td>
-                            <td><button style="all:revert; background-color:lightgreen; width:100%" type="submit" name="review" value="<?= $row['ProjectID'] ?>">Review</button></td>
+                            <td><button style="all:revert; background-color:lightgreen; width:100%" type="submit" name="download" value="<?= $row['ProjectID'] ?>">Download</button></td>
+                            <td><button style="all:revert; background-color:lightblue; width:100%" type="submit" name="review" value="<?= $row['ProjectID'] ?>">Review</button></td>
                         </tr>
                         <?php
                     }
