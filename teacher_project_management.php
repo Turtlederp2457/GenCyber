@@ -20,22 +20,26 @@ if (isset($_POST['addProject'])) {
     $title = test_input($_POST['title']);
     $description = test_input($_POST['description']);
     $sql = "INSERT INTO Projects (Title, Description, TeacherID, EventID) VALUES ('" . $title . "', '" . $description . "', " . $rid['TeacherID'] . ", 1)";
-    if(isset($_FILES['file'])) {
-        // Check if the file was uploaded without errors
-        if($_FILES['file']['error'] == 0) {
-            // Get the file name
-            $filename = $_FILES['file']['name'];
-            // Get the file size
-            $filesize = $_FILES['file']['size'];
-            // Get the temporary location of the file
-            $filetmp = $_FILES['file']['tmp_name'];
-            // Get the file type
-            $filetype = $_FILES['file']['type'];
-            //insert sql function to upload to sql server here
 
-        }
-    }
     if (mysqli_query($connection, $sql)) {
+        if(isset($_FILES['file'])) {
+            // Check if the file was uploaded without errors
+            if($_FILES['file']['error'] == 0) {
+                // Get the file name
+                $filename = $_FILES['file']['name'];
+                // Get the file size
+                $filesize = $_FILES['file']['size'];
+                // Get the temporary location of the file
+                $filetmp = $_FILES['file']['tmp_name'];
+                // Get the file type
+                $filetype = $_FILES['file']['type'];
+                $fileContent = file_get_contents($file['tmp_name']);
+                //insert sql function to upload to sql server here
+                $stmt = $conn->prepare("INSERT INTO Attachments (AttachmentName, ProjectID, AttachmentType, Attachment) VALUES (?, ?, ?)");
+                $stmt->bind_param("sss", $fileName, $projectID, $fileType, $fileContent);
+                $stmt->execute();
+            }
+            }
        mysqli_close($connection);
         header('location: teacher_project_management.php');
     } else {
