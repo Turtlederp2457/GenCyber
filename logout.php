@@ -12,12 +12,13 @@ session_start();
 
 // Clear destroy the session
 
-if(@$_SESSION["user_name"]){
+if($_SESSION['UserID']){
 	
 
-	$_SESSION["user_name"] = false;
-
-
+// 	$_SESSION["user_name"] = false;
+//     $_SESSION['project_id'] = false;
+//     $_SESSION['judge_id'] = false;
+    session_unset();
 	session_destroy();
 
 }

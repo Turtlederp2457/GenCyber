@@ -4,7 +4,7 @@ if(isset($_POST['logout'])) {
   include "logout.php";
 }
 session_start();
-$judge_id = "";
+print_r($_SESSION);
 /*
  * This is where we will begin our query to insert
  * judge values into judges_tbl
@@ -70,41 +70,24 @@ if (isset($_POST['activate'])) {
 }
 
 /* Here we will retrieve the values of selected judge
- * Then we will set values to be generated in our popup form
+ * Then we will set SESSION values to use as needed
  */
 if (isset($_POST['assign_judge'])) {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_email = $_POST['assign_judge'];
+    $_SESSION['judge_email'] = $user_email;
     $query = "SELECT Users.UserID, Users.user_email, Judges.First_name, Judges.Last_name ".
       "FROM Users inner join Judges on Users.UserID = Judges.UserID ".
-      "WHERE Users.user_email = '{$user_email}'";
+      "WHERE Users.user_email = '{$_SESSION['judge_email']}'";
     $result = mysqli_query($connection, $query);
     $judge = mysqli_fetch_assoc($result);
-    $judge_first_name = $judge['First_name'];
-    $judge_last_name = $judge['Last_name'];
-    $judge_id = $judge['UserID'];
-//     $review_query = "call MakeReview(?, ?)";
-//     $stmt = mysqli_prepare($connection, $review_query);
-//     $stmt->bind_param("ss", $ProjectID, $JudgeID);
-//     $stmt->execute();
-//     $stmt->close();
-
+    $_SESSION['judge_first_name'] = $judge['First_name'];
+    $_SESSION['judge_last_name'] = $judge['Last_name'];
+    $_SESSION['judge_id'] = $judge['UserID'];
+    header('location: admin_assign_judge.php');
   }
 }
 
-if (isset($_POST['submit_assign'])){
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     var_dump($_POST);
-    $projectID = $_POST['submit_assign'];
-    $judgeID = $_POST['submit_assign'];
-    echo "this is proj ID: " .$projectID . "this is judge ID: " . $judge_id;
-//     $review_query = "call MakeReview(?, ?)";
-//     $stmt = mysqli_prepare($connection, $review_query);
-//     $stmt->bind_param("ss", $ProjectID, $JudgeID);
-//     $stmt->execute();
-//     $stmt->close();
-  }
-}
 function clearStoredResults($mysqli_link){
   while($mysqli_link->next_result()){
     if($l_result = $mysqli_link->store_result()){
@@ -285,6 +268,9 @@ a.button-prior {
 .wrapper-footer {
   border: 1px solid green;
   background-color: #F0F0F0;
+  width: 100%;
+  position:absolute; 
+  bottom: 0;
   display: grid;
   grid-template-columns: repeat(4, [col-start] 1fr);
   margin: auto;
@@ -394,42 +380,6 @@ table, th, td {
     </form>    
   </div>
   <?php clearStoredResults($connection);?>   
-  <center><strong>need to set value for submit to retrieve for query</strong></center>
-  <div id="assign_judge_div" style="display:block">
-    <form style="grid-template-columns: repeat(2, [col-start] 1fr)" method="post" id="assign_judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
-      <label style="margin-top:0" type="text" name="first_name"><?php if(isset($_POST['assign_judge'])){echo $judge_first_name;} else {echo "First Name";}?></label>
-      <label style="margin-top:0" type="text" name="last_name"><?php if(isset($_POST['assign_judge'])){echo $judge_last_name;} else {echo "Last Name";}?></label>
-      <?php
-        $eventID = 1;
-        $query = "SELECT ProjectID, Title, Description FROM Projects WHERE EventID = '{$eventID}'";
-        $result = mysqli_query($connection, $query);?>
-<!--         add onChange="alert(this.value)" to <select> to verify pID -->
-        <select id="proj_dropdown" style="height:50%">
-          <option value="" selected>Select a Project</option>
-	   <?php 
-        while($projects = mysqli_fetch_assoc($result)){?>
-            <option name="project" value="<?=$projects['ProjectID']?>"><?php echo $projects['ProjectID'] . ". " . $projects['Title'];?></option> 
-        <?php }?>
-        </select>
-      <button onclick="getValue()" value="<?=$projects['ProjectID']?>" data-value="<?=$judge_id?>" type="submit" id="submit_assign" name="submit_assign">Submit</button>
-    </form>
-  </div>
-<!--   this is our script to assign values to our select from chosen option -->
-  <script type="text/javascript">
-    var element = document.getElementById("proj_dropdown");
-    function onChange(){
-      var value = element.value();
-    }
-    element.onChange = onChange;
-    onChange();
-  </script>
-  <script type="text/javascript">
-    var submit = document.getElementById("submit_assign");
-    function getValue() {
-      var dV = submit.getAttribute("data-value");
-      alert("this is your selected judgeID: " + dV);
-    }
-  </script>
   <div style="margin-top:20px;min-height:30vh">
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Inactive Judges</h2>
@@ -452,13 +402,6 @@ table, th, td {
           <?php }?>
       </table> 
     </div>
-  </div>
-  <div style="background:black; color:red">
-    <p>
-        To Do List:<br>
-     	1. Assign Judges to project(s) <br>
-     	1a. Attempting to create a separate popup form pre-filled with chosen judges' info when assign button is clicked<br>
-      </p>
   </div>
   <div class="wrapper-footer">
     <div>Date Created</div>
