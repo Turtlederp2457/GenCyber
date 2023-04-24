@@ -218,9 +218,6 @@ a.button-prior {
     <a class="button-prior" style="background-color:#F0F0F0" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div style="margin:0">
-      <p class="error">This is my admin->winner_mgmt page template</p>
-    </div>
     <div>
       <h2>All Projects</h2>
     </div>
