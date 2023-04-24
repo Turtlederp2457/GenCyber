@@ -363,16 +363,19 @@ a.button-prior {
 .wrapper-footer {
   border: 1px solid green;
   background-color: #F0F0F0;
+  width: 100%;
+  position:fixed; 
+  bottom: 0;
   display: grid;
   grid-template-columns: repeat(4, [col-start] 1fr);
   margin: auto;
   text-align: center;
   font-size: 1.2em;
-  padding-bottom: 3px;
 }
 
 .registration-form {
   font-size: 0.8em;
+  min-height:50vh;
 }
 </style>
 <body>
@@ -413,9 +416,9 @@ a.button-prior {
   <div class="wrapper-menu">
     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a>
     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
-    <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
+    <a class="button-prior" href="http://localhost/GenCyber/contact.php">Contact Us</a>
   </div>
-  <div class="wrapper-registration">
+  <div>
 <!--     echo htmlspecialchars($_SERVER["PHP_SELF"]);?> -->
 <!-- 	 thank_you.php -->
     <form class="registration-form" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
@@ -553,6 +556,7 @@ a.button-prior {
    <div style="font-size:1.0em">
       <p>To Do List:<br>
         1. Add reCaptcha <br>
+        2. hash passwords<br>
       </p>
     </div>
   <div class="wrapper-footer">

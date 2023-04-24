@@ -178,7 +178,7 @@ a.button-prior {
   border: 1px solid green;
   background-color: #F0F0F0;
   width: 100%;
-  position:absolute; 
+  position:fixed; 
   bottom: 0;
   display: grid;
   grid-template-columns: repeat(4, [col-start] 1fr);
@@ -206,11 +206,6 @@ a.button-prior {
         style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
     </a>
   </div>
-<!--   <div class="wrapper-menu"> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a> -->
-<!--     <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a> -->
-<!--   </div> -->
   <div class="wrapper-admin-links">
     <a class="button-prior" href="http://localhost/GenCyber/teacher_management.php">Teacher Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/judge_management.php">Judge Management</a>

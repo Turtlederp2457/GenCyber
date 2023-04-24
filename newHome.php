@@ -166,12 +166,14 @@ a.button-prior {
 .wrapper-footer {
   border: 1px solid green;
   background-color: #F0F0F0;
+  width: 100%;
+  position:fixed; 
+  bottom: 0;
   display: grid;
   grid-template-columns: repeat(4, [col-start] 1fr);
   margin: auto;
   text-align: center;
   font-size: 1.2em;
-  padding-bottom: 3px;
 }
 </style>
 <body>
@@ -212,7 +214,7 @@ a.button-prior {
   <div class="wrapper-menu">
     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a>
     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
-    <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
+    <a class="button-prior" href="http://localhost/GenCyber/contact.php">Contact Us</a>
   </div>
   <div style="min-height:65vh" class="wrapper-main">
     <div style="margin:0">

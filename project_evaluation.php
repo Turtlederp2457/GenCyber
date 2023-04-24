@@ -218,12 +218,14 @@ if (isset($_POST['viewreview'])) {
         .wrapper-footer {
             border: 1px solid green;
             background-color: #F0F0F0;
+            width: 100%;
+            position:fixed; 
+            bottom: 0;
             display: grid;
             grid-template-columns: repeat(4, [col-start] 1fr);
             margin: auto;
             text-align: center;
             font-size: 1.2em;
-            padding-bottom: 3px;
         }
 
         #squares div {

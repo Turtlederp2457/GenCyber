@@ -178,7 +178,7 @@ a.button-prior {
   border: 1px solid green;
   background-color: #F0F0F0;
   width: 100%;
-  position:absolute; 
+  position:fixed; 
   bottom: 0;
   display: grid;
   grid-template-columns: repeat(4, [col-start] 1fr);
