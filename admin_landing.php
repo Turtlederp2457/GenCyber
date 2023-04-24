@@ -177,12 +177,14 @@ a.button-prior {
 .wrapper-footer {
   border: 1px solid green;
   background-color: #F0F0F0;
+  width: 100%;
+  position:absolute; 
+  bottom: 0;
   display: grid;
   grid-template-columns: repeat(4, [col-start] 1fr);
   margin: auto;
   text-align: center;
   font-size: 1.2em;
-  padding-bottom: 3px;
 }
 </style>
 <body>
@@ -211,19 +213,6 @@ a.button-prior {
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div style="margin:0">
-      <p class="error">This is my admin landing page template</p>
-    </div>
-    <div>Not sure if this page needs anything else besides links provided</div>
-    <div>
-      <p>
-        To Do List:<br>
-        1. work on teacher mgmt<br>
-        2. work on judge mgmt<br>
-        3. work on project mgmt<br>
-        4. work on winner mgmt<br>
-      </p>
-    </div>
   </div>
   <div class="wrapper-footer">
     <div>Date Created</div>

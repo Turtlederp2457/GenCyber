@@ -3,19 +3,36 @@ include "login.php";
 if(isset($_POST['logout'])) {
   include "logout.php";
 }
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 session_start();
 if (isset($_POST['submit_assign'])){
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $review_query = "call MakeReview(?, ?)";
-    $project_ID = $_POST['submit_assign'];
-    print_r($_SESSION);
-//     $stmt = mysqli_prepare($connection, $review_query);
-//     $stmt->bind_param("ss", $_SESSION['project_id'], $_SESSION['judge_id']);
-//     $stmt->execute();
-//     $stmt->close();
+  if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
+      if ($_POST['project_selection'] == "") {
+          $_SESSION['project_id'] = false;
+      } else {
+          $project = $_POST['project_selection'];
+          $project_info = json_decode($project);
+//           var_dump(json_decode($project, true));
+//           echo $project_info->{'id'};
+          $_SESSION['project_id'] = $project_info->{'id'};
+          $_SESSION['project_title'] = $project_info->{'title'};
+          $_SESSION['project_description'] = $project_info->{'desc'};
+//           print_r($_SESSION);
+      }
+      $review_query = "call MakeReview(?, ?)";
+      $stmt = mysqli_prepare($connection, $review_query);
+      $stmt->bind_param("ii", $_SESSION['project_id'], $_SESSION['judge_id']);
+      $stmt->execute();
+      $stmt->close();
+      header('location: judge_management.php');
+
   }
 }
-                
+if (isset($_POST['cancel_assign'])){
+  if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
+      header('location: judge_management.php');
+  }
+}
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -197,7 +214,6 @@ a.button-prior {
   margin: auto;
   text-align: center;
   font-size: 1.2em;
-  padding-bottom: 3px;
 }
 
 table, th, td {
@@ -205,11 +221,12 @@ table, th, td {
 }
 
 #assign_judge_div{
+  min-height: 50vh;
   display: block;
   width: 50%;
   background: #B0B0B0;
   border: 3px solid green;
-  grid-template-columns: repeat(2, [col-start] 1fr);
+  position: relative;
 /* the commented lines were used to make a form centered on window/screen  */
 /*   position: absolute; */ 
 /*   top: 50%; */ 
@@ -220,13 +237,41 @@ table, th, td {
 /*    min-width: 75vh; */ 
 /*   grid-template-rows: repeat(4, [row-start] 1fr); */
 }
+#assign_judge_form {
+  grid-template-columns: repeat(2, [col-start] 1fr);
+  grid-template-rows: repeat(5, [row-start] 1fr);
+  display: grid;
+  position:relative;
+  grid-template-areas: 
+    'first_name last_name'
+    'dropdown dropdown'
+    'title title_div'
+    'description description_div'
+    'cancel submit';
+}
 
-#submit_assign {
+#submit_assign_btn {
   all:revert; 
-  background-color:green; 
+  background-color:green;
+  height:100%;
+  width:100%;
+  grid-area: submit;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+#cancel_btn {
+  all:revert;
+  background-color:red;
   width: 100%; 
   height:100%;
+  grid-area: cancel;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
+
 </style>
 <body>
   <header>
@@ -254,39 +299,48 @@ table, th, td {
     <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
   <div id="assign_judge_div">
-    <form style="grid-template-columns: repeat(2, [col-start] 1fr)" method="post" id="assign_judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
-      <label style="margin-top:0" type="text" for="first_name"><?php echo $_SESSION['judge_first_name'];?></label>
-      <input hidden type="text" id="first_name" name="first_name" value="<?=$_SESSION['judge_first_name'];?>"</input>
-      <label style="margin-top:0" type="text" for="last_name"><?php echo $_SESSION['judge_last_name'];?></label>
-      <input hidden type="text" id="last_name" name="last_name" value="<?=$_SESSION['judge_last_name'];?>"</input>
+    <form method="post" id="assign_judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
+      <label style="grid-area:first_name" style="margin-top:0" type="text" for="first_name"><?php echo $_SESSION['judge_first_name'];?></label>
+      <!--  <input hidden type="text" id="first_name" name="first_name" value="<?=$_SESSION['judge_first_name'];?>"</input> -->
+      <label style="grid-area:last_name" style="margin-top:0" type="text" for="last_name"><?php echo $_SESSION['judge_last_name'];?></label>
+      <!--  <input hidden type="text" id="last_name" name="last_name" value="<?=$_SESSION['judge_last_name'];?>"</input> -->
       <?php
         $eventID = 1;
         $query = "SELECT ProjectID, Title, Description FROM Projects WHERE EventID = '{$eventID}'";
         $result = mysqli_query($connection, $query);?>
-        <select id="proj_dropdown" onChange="insertValue()" style="height:50%">
+      <div style="grid-area:dropdown; width:100%">
+        <select onchange="onChange()" id="proj_dropdown" style="height:50%; width:100%" name="project_selection">
           <option value="">Select a Project</option>
-	   <?php 
-        while($projects = mysqli_fetch_assoc($result)){?>
-            <option name="project" value="<?=$projects['ProjectID']?>"><?php echo $projects["ProjectID"] . ". " . $projects['Title'];?></option> 
-        <?php }?>
-        </select>
-      <input type="submit" id="submit_assign" name="submit_assign"/>
+          <?php
+            foreach ($result as $project => $field) {
+              $project_id = $field['ProjectID'];
+              $project_title = $field['Title'];
+              $project_description = $field['Description'];?>
+          	  <option id="proj_option" value='{"id":"<?=$project_id?>", "title":"<?=$project_title?>", "desc":"<?=$project_description?>"}'><?php echo $project_id . ". " . $project_title;?></option>
+          <?php }?>
+	    </select>
+	  </div>
+      <label style="grid-area:title" id="project_title" for="project_title">Title</label>
+      <div style="grid-area:title_div" id="title_div"><?php echo "Title here";?></div>
+      <label style="grid-area:description" id="project_description" for="project_description">Description</label>
+      <div style="grid-area:description_div" id="description_div"><?php echo "Description here"?></div>
+      <button type="submit" id="submit_assign_btn" name="submit_assign">Confirm</button>
+      <button type="submit" id="cancel_btn" name="cancel_assign">Cancel</button>
     </form>
   </div>
+<!--   this is our script to change title and description based on selection -->
   <script type="text/javascript">
-    function insertValue() {
-      var select = document.getElementById("proj_dropdown");
-      var selectedValue = select.options[select.selectedIndex].value;
-      alert("this is your selected project ID: " + selectedValue);
+    var select = document.getElementById("proj_dropdown");
+    var title_div = document.getElementById("title_div");
+    var desc_div = document.getElementById("description_div");
+    function onChange() {
+      const json = select.options[select.selectedIndex].value; //selected value is now JSON formatted for parsing on submit
+      const obj = JSON.parse(json);
+//       alert("this is your title: " + obj.title + "this is your desc: " + obj.desc);
+	  desc_div.innerHTML = obj.desc;
+	  title_div.innerHTML = obj.title
     }
   </script>
-  <div style="background:black; color:red">
-    <p>
-        To Do List:<br>
-     	1. Assign Judges to project(s) <br>
-     	2. edit layout <br>
-      </p>
-  </div>
   <div class="wrapper-footer">
     <div>Date Created</div>
     <div>Copyright</div>

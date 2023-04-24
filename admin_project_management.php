@@ -177,12 +177,14 @@ a.button-prior {
 .wrapper-footer {
   border: 1px solid green;
   background-color: #F0F0F0;
+  width: 100%;
+  position:absolute; 
+  bottom: 0;
   display: grid;
   grid-template-columns: repeat(4, [col-start] 1fr);
   margin: auto;
   text-align: center;
   font-size: 1.2em;
-  padding-bottom: 3px;
 }
 
 table, th, td {
@@ -240,7 +242,7 @@ table, th, td {
         while($row=mysqli_fetch_assoc($result)){?>
             <tr><?php
             foreach($row as $key => $field)
-          	  echo '<td>' . htmlspecialchars($field) . '</td>';?>
+                echo '<td>' . htmlspecialchars($field) . '</td>';?>
               <td><button style="all:revert; background-color:green; color: white; width: 100%;" type="submit" name="download" value="<?=$row['ProjectID']?>">Download</button></td>
               <td><button style="all:revert; background-color:purple; color: white; width: 100%;" type="submit" name="archive" value="<?=$row['ProjectID']?>">Archive</button></td>
             </tr>

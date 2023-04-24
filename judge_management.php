@@ -4,7 +4,6 @@ if(isset($_POST['logout'])) {
   include "logout.php";
 }
 session_start();
-print_r($_SESSION);
 /*
  * This is where we will begin our query to insert
  * judge values into judges_tbl
@@ -276,34 +275,10 @@ a.button-prior {
   margin: auto;
   text-align: center;
   font-size: 1.2em;
-  padding-bottom: 3px;
 }
 
 table, th, td {
   border: 1px solid;
-}
-
-#assign_judge_div{
-  width: 50%;
-  background: #B0B0B0;
-  border: 3px solid green;
-  grid-template-columns: repeat(2, [col-start] 1fr);
-/* the commented lines were used to make a form centered on window/screen  */
-/*   position: absolute; */ 
-/*   top: 50%; */ 
-/*   left: 50%; * */
-/*    margin-right: -50%; */ 
-/*    transform: translate(-50%, -50%); */ 
-/*    min-height: 50vh; */ 
-/*    min-width: 75vh; */ 
-/*   grid-template-rows: repeat(4, [row-start] 1fr); */
-}
-
-#submit_assign {
-  all:revert; 
-  background-color:green; 
-  width: 100%; 
-  height:100%;
 }
 </style>
 <body>
@@ -379,7 +354,7 @@ table, th, td {
       </table> 
     </form>    
   </div>
-  <?php clearStoredResults($connection);?>   
+  <?php clearStoredResults($connection);?>
   <div style="margin-top:20px;min-height:30vh">
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Inactive Judges</h2>
@@ -397,7 +372,6 @@ table, th, td {
           foreach($row as $key => $field)
           	echo '<td>' . htmlspecialchars($field) . '</td>';?>
             <td><button style="all:revert; background-color:green; width:100%" type="submit" name="activate" value="<?=$row['user_email']?>">Activate</button></td>
-            
           </tr>
           <?php }?>
       </table> 

@@ -252,6 +252,9 @@ a.button-prior {
 .wrapper-footer {
   border: 1px solid green;
   background-color: #F0F0F0;
+  width: 100%;
+  position:absolute; 
+  bottom: 0;
   display: grid;
   grid-template-columns: repeat(4, [col-start] 1fr);
   margin: auto;
@@ -360,15 +363,6 @@ table, th, td {
       </table> 
     </form> 
     </div>
-  </div>
-  <div>
-    <p>
-        To Do List:<br>
-        1. Need to update DB to hold Active Status <br>
-        2. Show the list of active teachers with "inactivate" button. <br>
-        3. Show the list of old/inactive teachers with "activate" button<br>
-        4. add CSS for table(s) <br>
-      </p>
   </div>
   <div class="wrapper-footer">
     <div>Date Created</div>
