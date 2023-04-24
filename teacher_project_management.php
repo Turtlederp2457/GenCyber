@@ -60,20 +60,31 @@ if (isset($_POST['addProject'])) {
 if (isset($_POST['edit'])) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ProjectID = $_POST['edit'];
-        //$_SESSION['ProjectID'] = $ProjectID;
-        header('location: newHome.php'); //change location to edit page
+        $_SESSION['ProjectID'] = $ProjectID;
+        header('location: teacher_project_edit.php');
     }
 }
 
 if (isset($_POST['delete'])) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ProjectID = $_POST['delete'];
+        $sql = "DELETE FROM `Attachments` WHERE ProjectID = ". $ProjectID;
+        if (mysqli_query($connection, $sql)) {
+            echo "Project successfully deleted";
+        } else {
+            echo "error deleting project";
+        }
+        $sql = "DELETE FROM `Reviews` WHERE ProjectID = ". $ProjectID;
+        if (mysqli_query($connection, $sql)) {
+            echo "Project successfully deleted";
+        } else {
+            echo "error deleting project";
+        }
         $sql = "DELETE FROM `Projects` WHERE ProjectID = ". $ProjectID;
         if (mysqli_query($connection, $sql)) {
             echo "Project successfully deleted";
         } else {
             echo "error deleting project";
-            header('location: teacher_error_page.php');
         }
         mysqli_close($connection);
         header('location: teacher_project_management.php');
@@ -380,12 +391,7 @@ if (isset($_POST['delete'])) {
         </div>
         <!-- right panel -->
         <div>
-            <p>
-                To Do List:<br>
-                1. Project management page will display all projects (teacher may manage multiple student teams/projects) with Add new project button <br>
-                2. Project Title, Short description, and Name and email of Students <br>
-                3. Teacher can edit projects until due date. <br>
-            </p>
+            
         </div>
     </div>
     <div class="wrapper-footer">
