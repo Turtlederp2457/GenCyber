@@ -70,7 +70,7 @@ if (isset($_POST['delete'])) {
         $ProjectID = $_POST['delete'];
         $sql = "DELETE FROM `Projects` WHERE ProjectID = ". $ProjectID;
         if (mysqli_query($connection, $sql)) {
-            echo "Project deleted";
+            echo "Project successfully deleted";
         } else {
             echo "error deleting project";
             header('location: teacher_error_page.php');
