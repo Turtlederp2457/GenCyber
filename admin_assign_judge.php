@@ -4,7 +4,6 @@ if(isset($_POST['logout'])) {
   include "logout.php";
 }
 session_start();
-print_r($_SESSION);
 if (isset($_POST['submit_assign'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
       if ($_POST['project_selection'] == "") {
