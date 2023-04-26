@@ -4,6 +4,17 @@ if(isset($_POST['logout'])){
 	include "logout.php";
 }
 session_start();
+require_once("database_conn.php");
+
+/* Here we will set session variable to be used 
+ * Then redirect the admin to the view comments php
+ */
+if(isset($_GET['view_comments'])){
+  if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    $_SESSION['project_id'] = $_GET['view_comments'];
+    header('location: admin_view_comments.php');
+  }
+}
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -186,6 +197,10 @@ a.button-prior {
   text-align: center;
   font-size: 1.2em;
 }
+
+table, th, td {
+  border: 1px solid;
+}
 </style>
 <body>
   <header>
@@ -214,13 +229,40 @@ a.button-prior {
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
     <div>
-      <h2>All Projects</h2>
+      <h2>Current Projects</h2>
+    </div>
+    <div>
+      <form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>">
+        <table>
+          <tr>
+            <th>Project ID</th>
+            <th>Project Title</th>
+            <th>Project Description</th>
+            <th>Project Score</th>
+            <th>Project Review</th>
+          </tr>
+        <?php 
+          $eventID = 1;
+//         need to order by project score DESC where score is combined values of all assigned judges individual score
+          $query = "SELECT ProjectID, Title, Description FROM Projects WHERE EventID = '{$eventID}'";
+          $result = mysqli_query($connection, $query);
+          while($row=mysqli_fetch_assoc($result)){?>
+              <tr><?php
+              foreach($row as $key => $field)
+                  echo '<td>' . htmlspecialchars($field) . '</td>';
+                  echo '<td>' . random_int(0,100). '</td>'; //placeholder until I query current score properly?> 
+                  <td><button style="all:revert; background-color:gold; width: 100%;" type="submit" name="view_comments" value="<?=$row['ProjectID']?>">View Comments</button></td>
+              </tr>
+          <?php }?>
+        </table>
+      </form>
     </div>
     <div>
       <p>
         To Do List:<br>
-        1. The projects will be displayed sorted by the combined score of the project evaluated by all judges <br>
+        1. Need to order by project score DESC where score is combined values of all assigned judges individual score<br>
         2. In each project, the link to view individual Judge's scores/comments. <br>
+        2a. on view_comments click, redirect to a page with project details and a list of all assigned judges scores/comments<br>
         3. Final winners can be decided by Admin <br>
       </p>
     </div>

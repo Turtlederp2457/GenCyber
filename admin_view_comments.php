@@ -1,40 +1,31 @@
-<?php 
+<?php
 include "login.php";
 if(isset($_POST['logout'])){
-	include "logout.php";
+    include "logout.php";
 }
 session_start();
-require_once("database_conn.php");
-if(isset($_POST['download'])) {
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      $sql = "SELECT AttachmentName, AttachmentType, AttachmentSize, Attachment FROM Attachments WHERE ProjectID = " . $_POST['download'];
-      $result = mysqli_query($connection, $sql);
-      
-      if (mysqli_num_rows($result) > 0) {
-          $row = mysqli_fetch_assoc($result);
-          $filename = $row['AttachmentName'];
-          $filetype = $row['AttachmentType'];
-          $filesize = $row['AttachmentSize'];
-          $content = $row['Attachment'];
-          
-          // Set the headers for downloading the file
-          header('Content-Type: application/octet-stream');
-          header("Content-Disposition: attachment; filename= Project " . $_POST['download'] . " ". $filename);
-          
-          // Convert the BLOB to a DOCX file and output it to the user
-          echo $row['Attachment']; exit;
-      } else {
-          echo "Error: File not found.";
-      }
-      
-      mysqli_close($connection);
+if(isset($_GET['confirm_btn'])){
+  if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    if ($_GET['judge_selection'] == ""){
+      $_SESSION['judge_id'] = false;
+    } else {
+      $_SESSION['judge_id'] = $_GET['judge_selection'];
+    }
   }
 }
 
-if(isset($_POST['archive'])){
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        
-  }
+function displayComments(){
+    $comment_query = "SELECT Completeness_comment, Originality_comment, Creativity_comment, Clarity_comment, Explanation_comment
+        FROM Reviews WHERE JudgeID = '{$_SESSION['judge_id']}'";
+    $result = mysqli_query($connection, $comment_query);
+    $row = mysqli_fetch_assoc($result);
+    $completeness = $row['Completeness_comment'];
+    $_SESSION['completeness_comment'] = $completeness;
+    $originality = $row['Originality_comment'];
+    $creativity = $row['Creativity_comment'];
+    $clarity = $row['Clarity_comment'];
+    $explanation = $row['Explanation_comment'];
+    echo $_SESSION['completeness_comment'];
 }
 ?>
 <!doctype html>
@@ -42,11 +33,11 @@ if(isset($_POST['archive'])){
 <head>
 <!-- Required meta tags --> 
 <meta charset = "utf-8"/>
-<meta name="sitePath" content="http://localhost/GenCyber/admin_project_management.php" />
+<meta name="sitePath" content="http://localhost/GenCyber/winner_management.php" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
 <!-- Add your name here one you have helped write this code -->
 <meta name="author" content="Gatlin Zornes">
-<title>Project Management - Marshall University GenCyber</title>
+<title>View Comments - Marshall University GenCyber</title>
 <!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/newHome_stylesheet.css" />  -->
 <!-- Might need this -->
 <!-- <base href="http://localhost/GenCyber/" target="_self"> -->
@@ -223,13 +214,51 @@ table, th, td {
   border: 1px solid;
 }
 
+#judge_selection_div{
+  height: 100%; 
+  width: 100%;
+  display: block;
+}
+
+#judge_selection_form{
+  height: 100%;
+  display: grid;
+  grid-template-areas:
+    'prompt prompt'
+    'dropdown dropdown'
+    'confirm confirm';
+}
+
+#judge_comments_div{
+  height: 100%; 
+  width: 100%;
+  display: grid;
+  grid-template-rows: repeat(5, [row-start] 1fr);
+  grid-template-columns: repeat(2, [col-start] 1fr);
+  grid-template-areas:
+    'completeness completeness_div'
+    'originality originality_div'
+    'creativity creativity_div'
+    'clarity clarity_div'
+    'explanation explanation_div';
+}
+#confirm_btn{
+  all:revert; 
+  background-color:green;
+  height: 50%;
+  width: 100%;
+  grid-area: confirm;
+  position: relative;
+  bottom: 0;
+  right: 0;
+}
 </style>
 <body>
   <header>
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <button class="button-general" type="submit" name="logout">Log Out</button>
       <div></div>
-      <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
+    <p><?php printf("Welcome, ".$_SESSION['first_name']);?></p>
     </form>
   </header>
   <div class="wrapper-logos">
@@ -246,45 +275,53 @@ table, th, td {
   <div class="wrapper-admin-links">
     <a class="button-prior" href="http://localhost/GenCyber/teacher_management.php">Teacher Management</a>
     <a class="button-prior" href="http://localhost/GenCyber/judge_management.php">Judge Management</a>
-    <a class="button-prior" style="background-color:#F0F0F0" href="http://localhost/GenCyber/admin_project_management.php">Project Management</a>
-    <a class="button-prior" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
+    <a class="button-prior" href="http://localhost/GenCyber/admin_project_management.php">Project Management</a>
+    <a class="button-prior" style="background-color:#F0F0F0" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div>
-      <h2>Current Projects</h2>
-    </div>
-    <div>
-      <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-      <table>
-        <tr>
-          <th>Project ID</th>
-          <th>Project Title</th>
-          <th>Project Description</th>
-          <th>Download</th>
-          <th>Archive</th>
-        </tr>
-      <?php 
-        $eventID = 1;
-        $query = "SELECT ProjectID, Title, Description FROM Projects WHERE EventID = '{$eventID}'";
-        $result = mysqli_query($connection, $query);
-        while($row=mysqli_fetch_assoc($result)){?>
-            <tr><?php
-            foreach($row as $key => $field)
-                echo '<td>' . htmlspecialchars($field) . '</td>';?>
-              <td><button style="all:revert; background-color:green; color: white; width: 100%;" type="submit" name="download" value="<?=$row['ProjectID']?>">Download</button></td>
-              <td><button style="all:revert; background-color:purple; color: white; width: 100%;" type="submit" name="archive" value="<?=$row['ProjectID']?>">Archive</button></td>
-            </tr>
-        <?php }?>
-      </table>
+    <div id="judge_selection_div">
+      <form id="judge_selection_form" method="get" action="<?php echo $_SERVER['PHP_SELF'];?>">
+        <div style="height:50%; grid-area:prompt; margin-top: 0; margin-bottom:0">Select a judge from the dropdown menu to view their comments</div>
+        <?php $review_query = "SELECT R.JudgeID, J.First_name, J.Last_name FROM Reviews as R 
+              INNER JOIN Judges as J on R.JudgeID = J.JudgeID
+              WHERE ProjectID = " . $_SESSION['project_id'];
+        $result = mysqli_query($connection, $review_query);?>
+        <select onchange="displayComments()" id="judge_dropdown" style="grid-area: dropdown;" name="judge_selection">
+          <option value="">Select a Judge</option>>
+          <?php foreach($result as $key=> $field){?>
+          <option id="judge_option" value="<?=$field['JudgeID']?>"><?php echo $field['First_name'] . " " . $field['Last_name'];?></option>
+          <?php }?>
+        </select>
+        <button type="submit" id="confirm_btn" name="confirm_btn">Confirm</button>
       </form>
     </div>
+    <div id="judge_comments_div">
+        <label style="grid-area:completeness; margin-left: 0" id="completeness" for="completeness">Completeness :</label>
+        <div style="grid-area:completeness_div" id="completeness_div"><?php echo "Completeness here";?></div>
+        <label style="grid-area:originality; margin-left: 0" id="originality" for="originality">Originality :</label>
+        <div style="grid-area:originality_div" id="originality_div"><?php echo "Originality here";?></div>
+        <label style="grid-area:creativity; margin-left: 0" id="creativity" for="creativity">Creativity :</label>
+        <div style="grid-area:creativity_div" id="creativity_div"><?php echo "Creativity here";?></div>
+        <label style="grid-area:clarity; margin-left: 0" id="clarity" for="project_title">Clarity :</label>
+        <div style="grid-area:clarity_div" id="clarity_div"><?php echo "Clarity here";?></div>
+        <label style="grid-area:explanation; margin-left: 0" id="explanation" for="project_title">Explanation :</label>
+        <div style="grid-area:explanation_div" id="explanation_div"><?php echo "Explanation here";?></div>
+    </div>
+    <script type="text/javascript">
+      var judge_select = document.getElementById("judge_dropdown");
+      var comp_div = document.getElementById("completeness_div");
+      var orig_div = document.getElementById("originality_div");
+      var create_div = document.getElementById("creativity_div");
+      var clarity_div = document.getElementById("clarity_div");
+      var explan_div = document.getElementById("explanation_div");
+      function displayComments(){
+        comp_div.innerHTML = $_SESSION['completeness_comment'];
+      }
+    </script>
     <div>
-      <p>
-        To Do List:<br>
-		1. Download project content upon completion/submission <br>
-        2. Reactivate Event button <br>
-        3. The project can be archived by admin for the next round of competition. <br>
-      </p>
+      <?php 
+        
+      ?>
     </div>
   </div>
   <div class="wrapper-footer">

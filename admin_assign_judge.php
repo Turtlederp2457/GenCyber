@@ -3,7 +3,6 @@ include "login.php";
 if(isset($_POST['logout'])) {
   include "logout.php";
 }
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 session_start();
 if (isset($_POST['submit_assign'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
@@ -12,24 +11,39 @@ if (isset($_POST['submit_assign'])){
       } else {
           $project = $_POST['project_selection'];
           $project_info = json_decode($project);
-//           var_dump(json_decode($project, true));
-//           echo $project_info->{'id'};
           $_SESSION['project_id'] = $project_info->{'id'};
           $_SESSION['project_title'] = $project_info->{'title'};
           $_SESSION['project_description'] = $project_info->{'desc'};
-//           print_r($_SESSION);
-      }
-      $review_query = "call MakeReview(?, ?)";
-      $stmt = mysqli_prepare($connection, $review_query);
-      $stmt->bind_param("ii", $_SESSION['project_id'], $_SESSION['judge_id']);
-      $stmt->execute();
-      $stmt->close();
-      header('location: judge_management.php');
+          $pid = $_SESSION['project_id'];
+          $jid = $_SESSION['judge_id'];
+          //set ids as integer variables instead of string for testing
+          $proj_id = intval($_SESSION['project_id']);
+          $judge_id = intval($_SESSION['judge_id']);
+          //set ids as static values for testing MakeReview
+          $a = 6;
+          $b = 29;
+          //begin query
+          $make_review_query = "call MakeReview(?, ?)";
+          $stmt = mysqli_prepare($connection, $make_review_query);
+          $stmt->bind_param("ii", $proj_id, $judge_id);
+//           $stmt->bind_param("ss", $_SESSION['project_id'], $_SESSION['judge_id']);
+//           $stmt->execute();
+//           $stmt->close();
+          //clear created session values
+          $_SESSION['project_id'] = false;
+          $_SESSION['project_title'] = false;
+          $_SESSION['project_description'] = false;
+//           header('location: judge_management.php');
 
+      }
   }
 }
 if (isset($_POST['cancel_assign'])){
-  if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
+  if ($_SERVER["REQUEST_METHOD"] == "POST"){
+      $_SESSION['judge_first_name'] = false;
+      $_SESSION['judge_last_name'] = false;
+      $_SESSION['judge_id'] = false;
+      $_SESSION['judge_email'] = false;
       header('location: judge_management.php');
   }
 }
@@ -300,9 +314,9 @@ table, th, td {
   </div>
   <div id="assign_judge_div">
     <form method="post" id="assign_judge_form" action="<?php echo $_SERVER['PHP_SELF'];?>">
-      <label style="grid-area:first_name" style="margin-top:0" type="text" for="first_name"><?php echo $_SESSION['judge_first_name'];?></label>
+      <label style="grid-area:first_name; margin-top:0" type="text" for="first_name"><?php echo $_SESSION['judge_first_name'];?></label>
       <!--  <input hidden type="text" id="first_name" name="first_name" value="<?=$_SESSION['judge_first_name'];?>"</input> -->
-      <label style="grid-area:last_name" style="margin-top:0" type="text" for="last_name"><?php echo $_SESSION['judge_last_name'];?></label>
+      <label style="grid-area:last_name; margin-top:0" type="text" for="last_name"><?php echo $_SESSION['judge_last_name'];?></label>
       <!--  <input hidden type="text" id="last_name" name="last_name" value="<?=$_SESSION['judge_last_name'];?>"</input> -->
       <?php
         $eventID = 1;
@@ -312,7 +326,7 @@ table, th, td {
         <select onchange="onChange()" id="proj_dropdown" style="height:50%; width:100%" name="project_selection">
           <option value="">Select a Project</option>
           <?php
-            foreach ($result as $project => $field) {
+            foreach ($result as $key => $field) {
               $project_id = $field['ProjectID'];
               $project_title = $field['Title'];
               $project_description = $field['Description'];?>

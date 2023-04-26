@@ -4,6 +4,8 @@ if(isset($_POST['logout'])) {
   include "logout.php";
 }
 session_start();
+require_once("database_conn.php");
+
 /*
  * This is where we will begin our query to insert
  * judge values into judges_tbl
