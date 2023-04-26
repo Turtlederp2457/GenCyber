@@ -15,39 +15,88 @@ if (mysqli_num_rows($res) > 0) {
     echo "No rows found";
 }
 
+if (isset($_POST['addS'])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $fname = test_input($_POST['fname']);
+        $lname = test_input($_POST['lname']);
+        $email = test_input($_POST['semail']);
+        $sql = "INSERT INTO Students (First_name, Last_name, Email, ProjectID) VALUES ('" . $fname . "', '" . $lname . "', '" . $email . "', " . $_SESSION['ProjectID'] . ")";
+
+        if (mysqli_query($connection, $sql)) {
+            mysqli_close($connection);
+            header('location: teacher_project_edit.php');
+        } else {
+            mysqli_close($connection);
+            header('location: teacher_error_page.php');
+        }
+    }
+}
+
+if (isset($_POST['removeS'])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $studentID = test_input($_POST['removeS']);
+        $sql = "DELETE FROM Students WHERE StudentID = ". $studentID;
+
+        if (mysqli_query($connection, $sql)) {
+            mysqli_close($connection);
+            header('location: teacher_project_edit.php');
+        } else {
+            mysqli_close($connection);
+            header('location: teacher_error_page.php');
+        }
+    }
+}
+
+if (isset($_POST['deleteA'])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $attachmentID = test_input($_POST['deleteA']);
+        $sql = "DELETE FROM Attachments WHERE AttachmentID = ". $attachmentID;
+
+        if (mysqli_query($connection, $sql)) {
+            mysqli_close($connection);
+            header('location: teacher_project_edit.php');
+        } else {
+            mysqli_close($connection);
+            header('location: teacher_error_page.php');
+        }
+    }
+}
+
 if (isset($_POST['save'])) {
     $title = test_input($_POST['title']);
     $description = test_input($_POST['description']);
     $sql = "UPDATE Projects SET Title = '" . $title . "', Description = '" . $description . "' WHERE ProjectID = " . $_SESSION['ProjectID'];
 
     if (mysqli_query($connection, $sql)) {
-        //if (isset($_FILES['file'])) {
-            // Check if the file was uploaded without errors
-            if ($_FILES['file']['error'] == 0) {
-                //Actual File
-                $file = $_FILES['file'];
-                // Get the file name
-                $filename = $_FILES['file']['name'];
-                // Get the file size
-                $filesize = $_FILES['file']['size'];
-                // Get the temporary location of the file
-                $filetmp = $_FILES['file']['tmp_name'];
-                // Get the file type
-                $filetype = $_FILES['file']['type'];
-                
-                $fileContent = file_get_contents($file['tmp_name']);
-
-                $stmt = mysqli_prepare($connection, "UPDATE Attachments SET AttachmentName = ?, AttachmentType = ?, Attachment = ? WHERE ProjectID = ". $_SESSION['ProjectID']);
-                mysqli_stmt_bind_param($stmt, "sss", $filename, $filetype, $fileContent);
-                $stmt->execute();
-            }
-        //}
         mysqli_close($connection);
-        header('location: teacher_project_management.php');
+        header('location: teacher_project_edit.php');
     } else {
         mysqli_close($connection);
         header('location: teacher_error_page.php');
     }
+}
+
+if (isset($_POST['uploadA'])) {
+    $filename = $_FILES['file']['name'];
+    $filetemp = $_FILES['file']['tmp_name'];
+    $filesize = $_FILES['file']['size'];
+    $filetype = $_FILES['file']['type'];
+    
+    // Open the file and convert it to BLOB
+    $file = fopen($filetemp, 'r');
+    $content = fread($file, filesize($filetemp));
+    $content = addslashes($content);
+    fclose($file);
+
+    // Insert the BLOB into the database
+    $sql = "INSERT INTO Attachments (ProjectID, AttachmentName, AttachmentType, AttachmentSize, Attachment) VALUES (". $_SESSION['ProjectID'] ." , '$filename', '$filetype', '$filesize', '$content')";
+    if (mysqli_query($connection, $sql)) {
+        echo "File uploaded successfully.";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    }
+    mysqli_close($connection);
+    header('location: teacher_project_edit.php');
 }
 ?>
 <!doctype html>
@@ -292,37 +341,116 @@ if (isset($_POST['save'])) {
                  style="height:100px;width:150px" alt="GenCyber Logo" class="gencyber-logo"/>
         </a>
     </div>
+    <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
+        <div style="margin:30px; border: solid;">
+            <!-- Left Panel -->
+            <center><h2>Student Roster</h2></center>
+            <form style="display: inline-block;" id="studentRoster" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <table>
+                    <tr>
+                        <th>Student #</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Remove Student</th>
+                    </tr>
+                    <?php
+                    $sql = "SELECT StudentID, First_name, Last_name, Email "
+                            . "FROM Students WHERE ProjectID = " . $_SESSION['ProjectID'];
+                    $result = mysqli_query($connection, $sql);
 
-
-    <div style="margin-top:30px;">
-        <center>
-            <h2><?php printf("Project " . $_SESSION['ProjectID']); ?></h2><br>
-            <?php
-            $sql = "SELECT ProjectID, Title, Description "
-                    . "FROM Projects WHERE ProjectID = " . $_SESSION['ProjectID'] . " and TeacherID = " . $rid['TeacherID'] . ";";
-            $result = mysqli_query($connection, $sql);
-
-            if (mysqli_num_rows($result) > 0) {
-                // Save row data to variable
-                $row = mysqli_fetch_assoc($result);
-            } else {
-                echo "No rows found";
-            }
-            ?>
-            <form style="display: inline-block;" id="editProj" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                <label>Project Title:</label><br>
-                <input type="text" name="title" placeholder="Title" size="40" required value="<?php echo $row['Title'] ?>"><br><br>
-                <label>Project Description:</label><br>
-                <textarea style="resize: none;" name="description" placeholder="Short Description" cols="36" rows="6"><?php echo $row['Description'] ?></textarea><br><br>
-                <label for="file">Select a file to upload:</label><br>
-                <input type="file" name="file" id="file"><br><br>
-                <div style="width: 100%; display: table; position: fixed; bottom: 0; left: 150px;">
-                    <div style="width: auto; display: table-cell;"><button class="button-general" style="background-color: lightgray; width: 110px" type="button" name="cancel" onclick="window.location.href = 'teacher_project_management.php';">Cancel</button></div>
-                    <div id="sub" style="width: auto; display: table-cell;"><button class="button-general" style="background-color: yellow;" type="submit" name="save">Save Changes</button></div>
-                </div>
-
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        ?>
+                        <tr><?php
+                            foreach ($row as $key => $field)
+                                echo '<td>' . htmlspecialchars($field) . '</td>';
+                            ?>
+                            <td><button style="all:revert; background-color:orange; color: white; width:100%" type="submit" name="removeS" value="<?= $row['StudentID'] ?>">Remove</button></td>
+                        </tr>
+                        <?php
+                    }
+                    //mysqli_close($connection);
+                    ?>
+                </table>
+            </form><br>
+            <form style="display: inline-block;" id="addStudent" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <h3>Add Student</h3><br>
+                <label>Student Name:</label><br>
+                <input type="text" name="fname" placeholder="First Name" required><br>
+                <input type="text" name="lname" placeholder="Last Name" required><br>
+                <label>Email:</label>
+                <input type="text" name="semail" placeholder="Email" required><br><br>
+                <button class="button-general" style="background-color: yellow;" type="submit" name="addS">Save & Add</button>
             </form>
-        </center>
+        </div>
+
+        <div style="margin-top:30px; border: solid;">
+            <center>
+                <h2><?php printf("Project " . $_SESSION['ProjectID']); ?></h2><br>
+                <?php
+                $sql = "SELECT ProjectID, Title, Description "
+                        . "FROM Projects WHERE ProjectID = " . $_SESSION['ProjectID'] . " and TeacherID = " . $rid['TeacherID'] . ";";
+                $result = mysqli_query($connection, $sql);
+
+                if (mysqli_num_rows($result) > 0) {
+                    // Save row data to variable
+                    $row = mysqli_fetch_assoc($result);
+                } else {
+                    echo "No rows found";
+                }
+                ?>
+                <form style="display: inline-block;" id="editProj" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                    <label>Project Title:</label><br>
+                    <input type="text" name="title" placeholder="Title" size="40" required value="<?php echo $row['Title'] ?>"><br><br>
+                    <label>Project Description:</label><br>
+                    <textarea style="resize: none;" name="description" placeholder="Short Description" cols="36" rows="6"><?php echo $row['Description'] ?></textarea><br><br>
+                    <button class="button-general" style="background-color: yellow;" type="submit" name="save">Save Changes</button>
+                    <!--                    <label for="file">Select a file to upload:</label><br>
+                                        <input type="file" name="file" id="file"><br><br>
+                    -->
+
+                </form>
+            </center>
+        </div>
+        <div style="margin:30px; border: solid;">
+            <!--Right panel-->
+            <center><h2>File Management</h2></center>
+            <form style="display: inline-block;" id="studentRoster" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <table>
+                    <tr>
+                        <th>File #</th>
+                        <th>Attachment Name</th>
+                        <th>Delete</th>
+                    </tr>
+                    <?php
+                    $sql = "SELECT AttachmentID, AttachmentName "
+                            . "FROM Attachments WHERE ProjectID = " . $_SESSION['ProjectID'];
+                    $result = mysqli_query($connection, $sql);
+
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        ?>
+                        <tr><?php
+                            foreach ($row as $key => $field)
+                                echo '<td>' . htmlspecialchars($field) . '</td>';
+                            ?>
+                            <td><button style="all:revert; background-color:orange; color: white; width:100%" type="submit" name="deleteA" value="<?= $row['AttachmentID'] ?>">Remove</button></td>
+                        </tr>
+                        <?php
+                    }
+                    //mysqli_close($connection);
+                    ?>
+                </table>
+            </form><br>
+            <form style="display: inline-block;" id="uploadAttachment" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <h3>Upload New File</h3><br>
+                <label>Select file:</label><br>
+                <input type="file" name="file" id="file" required><br><br>
+                <button class="button-general" style="background-color: yellow;" type="submit" name="uploadA">Save & Upload</button>
+            </form>
+        </div>
+    </div>
+    <div style="width: 100%; position: fixed; left: 50px;">
+        <button class="button-general" style="background-color: lightgray; width: 110px" type="button" name="cancel" onclick="window.location.href = 'teacher_project_management.php';">Go Back</button>
     </div>
 
 </body>

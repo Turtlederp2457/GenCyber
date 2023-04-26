@@ -68,6 +68,12 @@ if (isset($_POST['edit'])) {
 if (isset($_POST['delete'])) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ProjectID = $_POST['delete'];
+        $sql = "DELETE FROM `Students` WHERE ProjectID = ". $ProjectID;
+        if (mysqli_query($connection, $sql)) {
+            echo "Project successfully deleted";
+        } else {
+            echo "error deleting project";
+        }
         $sql = "DELETE FROM `Attachments` WHERE ProjectID = ". $ProjectID;
         if (mysqli_query($connection, $sql)) {
             echo "Project successfully deleted";
@@ -383,13 +389,15 @@ if (isset($_POST['delete'])) {
                         echo '<td>' . htmlspecialchars($field) . '</td>';
                     ?>
                         <td><button style="all:revert; background-color:lightblue; width:100%" type="submit" name="edit" value="<?= $row['ProjectID'] ?>">Edit</button></td>
-                            <td><button style="all:revert; background-color:red; color: white; width:100%" type="submit" name="delete" value="<?= $row['ProjectID'] ?>">Delete</button></td>
+                            <td><button id='sub' style="all:revert; background-color:red; color: white; width:100%" type="submit" name="delete" value="<?= $row['ProjectID'] ?>">Delete</button></td>
                     </tr>
                 <?php
                 }
                 mysqli_close($connection);
                 ?>
             </table>
+
+                </div>
             </form>
         </div>
         <!-- right panel -->
