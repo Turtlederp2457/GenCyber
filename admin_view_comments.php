@@ -14,19 +14,6 @@ if(isset($_GET['confirm_btn'])){
   }
 }
 
-function displayComments(){
-    $comment_query = "SELECT Completeness_comment, Originality_comment, Creativity_comment, Clarity_comment, Explanation_comment
-        FROM Reviews WHERE JudgeID = '{$_SESSION['judge_id']}'";
-    $result = mysqli_query($connection, $comment_query);
-    $row = mysqli_fetch_assoc($result);
-    $completeness = $row['Completeness_comment'];
-    $_SESSION['completeness_comment'] = $completeness;
-    $originality = $row['Originality_comment'];
-    $creativity = $row['Creativity_comment'];
-    $clarity = $row['Clarity_comment'];
-    $explanation = $row['Explanation_comment'];
-    echo $_SESSION['completeness_comment'];
-}
 ?>
 <!doctype html>
 <html lang="en-us" class="scroll-smooth"/>
@@ -279,7 +266,8 @@ table, th, td {
     <a class="button-prior" style="background-color:#F0F0F0" href="http://localhost/GenCyber/winner_management.php">Winner Management</a>
   </div>
   <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
-    <div id="judge_selection_div">
+<!--     something previously being worked on (outdated) -->
+    <div id="judge_selection_div" style="display:none">
       <form id="judge_selection_form" method="get" action="<?php echo $_SERVER['PHP_SELF'];?>">
         <div style="height:50%; grid-area:prompt; margin-top: 0; margin-bottom:0">Select a judge from the dropdown menu to view their comments</div>
         <?php $review_query = "SELECT R.JudgeID, J.First_name, J.Last_name FROM Reviews as R 
@@ -296,16 +284,28 @@ table, th, td {
       </form>
     </div>
     <div id="judge_comments_div">
+      <?php $query = "SELECT Completeness_comment, Originality_comment, Creativity_comment, Clarity_comment, Explanation_comment
+              FROM Reviews WHERE ReviewID= " .$_SESSION['reviewID'];
+        $result = mysqli_query($connection, $query);
+        $row=mysqli_fetch_assoc($result);
+        $completeness = $row['Completeness_comment'];
+        $originality = $row['Originality_comment'];
+        $creativity = $row['Creativity_comment'];
+        $clarity = $row['Clarity_comment'];
+        $explanation = $row['Explanation_comment'];
+        
+
+      ?>
         <label style="grid-area:completeness; margin-left: 0" id="completeness" for="completeness">Completeness :</label>
-        <div style="grid-area:completeness_div" id="completeness_div"><?php echo "Completeness here";?></div>
+        <div style="grid-area:completeness_div" id="completeness_div"><?php echo $completeness;?></div>
         <label style="grid-area:originality; margin-left: 0" id="originality" for="originality">Originality :</label>
-        <div style="grid-area:originality_div" id="originality_div"><?php echo "Originality here";?></div>
+        <div style="grid-area:originality_div" id="originality_div"><?php echo "$originality";?></div>
         <label style="grid-area:creativity; margin-left: 0" id="creativity" for="creativity">Creativity :</label>
-        <div style="grid-area:creativity_div" id="creativity_div"><?php echo "Creativity here";?></div>
+        <div style="grid-area:creativity_div" id="creativity_div"><?php echo $creativity;?></div>
         <label style="grid-area:clarity; margin-left: 0" id="clarity" for="project_title">Clarity :</label>
-        <div style="grid-area:clarity_div" id="clarity_div"><?php echo "Clarity here";?></div>
+        <div style="grid-area:clarity_div" id="clarity_div"><?php echo $clarity;?></div>
         <label style="grid-area:explanation; margin-left: 0" id="explanation" for="project_title">Explanation :</label>
-        <div style="grid-area:explanation_div" id="explanation_div"><?php echo "Explanation here";?></div>
+        <div style="grid-area:explanation_div" id="explanation_div"><?php echo $explanation;?></div>
     </div>
     <script type="text/javascript">
       var judge_select = document.getElementById("judge_dropdown");

@@ -4,7 +4,6 @@ if(isset($_POST['logout'])){
 	include "logout.php";
 }
 session_start();
-require_once("database_conn.php");
 if(isset($_POST['download'])) {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $sql = "SELECT AttachmentName, AttachmentType, AttachmentSize, Attachment FROM Attachments WHERE ProjectID = " . $_POST['download'];
@@ -30,10 +29,22 @@ if(isset($_POST['download'])) {
       mysqli_close($connection);
   }
 }
-
+/* Need to update Projects based on EventID (FK)
+ * needs work
+ */
 if(isset($_POST['archive'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        
+    $ProjectID = intval($_POST['archive']);
+
+    $archive_query = "UPDATE Projects SET EventID = EventID +1 WHERE ProjectID = " .$ProjectID;
+    $result = mysqli_query($connection, $sql);
+    if (mysqli_affected_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result); 
+        echo "hello";
+    } else {
+        echo "Error";
+    }
+   
   }
 }
 ?>

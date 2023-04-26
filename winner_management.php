@@ -1,19 +1,19 @@
-<?php 
+<?php
 include "login.php";
 if(isset($_POST['logout'])){
-	include "logout.php";
+    include "logout.php";
 }
 session_start();
 require_once("database_conn.php");
 
-/* Here we will set session variable to be used 
+/* Here we will set session variable to be used
  * Then redirect the admin to the view comments php
  */
 if(isset($_GET['view_comments'])){
-  if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    $_SESSION['project_id'] = $_GET['view_comments'];
-    header('location: admin_view_comments.php');
-  }
+    if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        $_SESSION['reviewID'] = $_GET['view_comments'];
+        header('location: admin_view_comments.php');
+    }
 }
 ?>
 <!doctype html>
@@ -38,6 +38,7 @@ if(isset($_GET['view_comments'])){
 
 body {
   min-height: 100vh;
+    overflow-y:scroll;
 }
 
 header {
@@ -239,6 +240,7 @@ table, th, td {
             <th>Project Title</th>
             <th>Project Description</th>
             <th>Project Score</th>
+            <th>Review ID
             <th>Project Review</th>
           </tr>
         <?php 
@@ -249,21 +251,14 @@ table, th, td {
           while($row=mysqli_fetch_assoc($result)){?>
               <tr><?php
               foreach($row as $key => $field)
-                  echo '<td>' . htmlspecialchars($field) . '</td>';?> 
-                  <td><button style="all:revert; background-color:gold; width: 100%;" type="submit" name="view_comments" value="<?=$row['ProjectID']?>">View Comments</button></td>
+                echo '<td>' . htmlspecialchars($field) . '</td>';?> 
+                  <td><button style="all:revert; background-color:gold; width: 100%;" type="submit" name="view_comments" value="<?=$row['reviewID']?>">View Comments</button></td>
               </tr>
           <?php }?>
         </table>
       </form>
     </div>
     <div>
-      <p>
-        To Do List:<br>
-        1. Need to order by project score DESC where score is combined values of all assigned judges individual score<br>
-        2. In each project, the link to view individual Judge's scores/comments. <br>
-        2a. on view_comments click, redirect to a page with project details and a list of all assigned judges scores/comments<br>
-        3. Final winners can be decided by Admin <br>
-      </p>
     </div>
   </div>
   <div class="wrapper-footer">
@@ -278,4 +273,3 @@ table, th, td {
  
 </body>
 </html>
-
