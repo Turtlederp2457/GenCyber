@@ -244,13 +244,12 @@ table, th, td {
         <?php 
           $eventID = 1;
 //         need to order by project score DESC where score is combined values of all assigned judges individual score
-          $query = "SELECT ProjectID, Title, Description FROM Projects WHERE EventID = '{$eventID}'";
+          $query = "call TotalScores('{$eventID}')";
           $result = mysqli_query($connection, $query);
           while($row=mysqli_fetch_assoc($result)){?>
               <tr><?php
               foreach($row as $key => $field)
-                  echo '<td>' . htmlspecialchars($field) . '</td>';
-                  echo '<td>' . random_int(0,100). '</td>'; //placeholder until I query current score properly?> 
+                  echo '<td>' . htmlspecialchars($field) . '</td>';?> 
                   <td><button style="all:revert; background-color:gold; width: 100%;" type="submit" name="view_comments" value="<?=$row['ProjectID']?>">View Comments</button></td>
               </tr>
           <?php }?>
