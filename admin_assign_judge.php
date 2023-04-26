@@ -4,6 +4,7 @@ if(isset($_POST['logout'])) {
   include "logout.php";
 }
 session_start();
+print_r($_SESSION);
 if (isset($_POST['submit_assign'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
       if ($_POST['project_selection'] == "") {
@@ -20,20 +21,30 @@ if (isset($_POST['submit_assign'])){
           $proj_id = intval($_SESSION['project_id']);
           $judge_id = intval($_SESSION['judge_id']);
           //set ids as static values for testing MakeReview
-          $a = 6;
+          $isEvaluated = 0;
           $b = 29;
           //begin query
-          $make_review_query = "call MakeReview(?, ?)";
-          $stmt = mysqli_prepare($connection, $make_review_query);
-          $stmt->bind_param("ii", $proj_id, $judge_id);
-//           $stmt->bind_param("ss", $_SESSION['project_id'], $_SESSION['judge_id']);
-//           $stmt->execute();
-//           $stmt->close();
+//           $make_review_query = "call MakeReview(?, ?)";
+          /* Judges -> JudgeID (FK in Reviews) (stored in $_SESSION)
+           * Projects ->ProjectID (stored in $_SESSION)
+           */
+          echo "judgeID: " . $_SESSION['judge_user_id'] . " " . "projectID: ". $_SESSION['project_id'];
+          $make_review_query = "INSERT INTO Reviews (ProjectID, JudgeID, isEvaluated) 
+            VALUES(
+            (SELECT ProjectID FROM Projects WHERE ProjectID='{$_SESSION['project_id']}') ,     
+            (SELECT JudgeID FROM Judges WHERE UserID='{$_SESSION['judge_user_id']}'),
+            0
+            )";
+          $result = mysqli_query($connection, $make_review_query);
           //clear created session values
           $_SESSION['project_id'] = false;
           $_SESSION['project_title'] = false;
           $_SESSION['project_description'] = false;
-//           header('location: judge_management.php');
+          $_SESSION['judge_first_name'] = false;
+          $_SESSION['judge_last_name'] = false;
+          $_SESSION['judge_user_id'] = false;
+          $_SESSION['judge_email'] = false;
+          header('location: judge_management.php');
 
       }
   }
@@ -42,7 +53,7 @@ if (isset($_POST['cancel_assign'])){
   if ($_SERVER["REQUEST_METHOD"] == "POST"){
       $_SESSION['judge_first_name'] = false;
       $_SESSION['judge_last_name'] = false;
-      $_SESSION['judge_id'] = false;
+      $_SESSION['judge_user_id'] = false;
       $_SESSION['judge_email'] = false;
       header('location: judge_management.php');
   }

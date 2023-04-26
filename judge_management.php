@@ -4,7 +4,7 @@ if(isset($_POST['logout'])) {
   include "logout.php";
 }
 session_start();
-require_once("database_conn.php");
+print_r($_SESSION);
 
 /*
  * This is where we will begin our query to insert
@@ -84,7 +84,7 @@ if (isset($_POST['assign_judge'])) {
     $judge = mysqli_fetch_assoc($result);
     $_SESSION['judge_first_name'] = $judge['First_name'];
     $_SESSION['judge_last_name'] = $judge['Last_name'];
-    $_SESSION['judge_id'] = $judge['UserID'];
+    $_SESSION['judge_user_id'] = $judge['UserID'];
     header('location: admin_assign_judge.php');
   }
 }
