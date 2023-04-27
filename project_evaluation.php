@@ -7,28 +7,49 @@ session_start();
 require_once("database_conn.php");
 
 if (isset($_POST['download'])) {
-    // Select the BLOB from the database
-    $sql = "SELECT AttachmentName, AttachmentType, AttachmentSize, Attachment FROM Attachments WHERE ProjectID = " . $_POST['download'];
-    $result = mysqli_query($connection, $sql);
+// Set the project ID
+$project_id = $_POST['download'];
 
-    if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $filename = $row['AttachmentName'];
-        $filetype = $row['AttachmentType'];
-        $filesize = $row['AttachmentSize'];
-        $content = $row['Attachment'];
+// Prepare the SQL statement to select the blobs
+$stmt = $connection->prepare("SELECT AttachmentName, Attachment FROM Attachments WHERE ProjectID = ?");
+$stmt->bind_param("i", $project_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
-        // Set the headers for downloading the file
-        header('Content-Type: application/octet-stream');
-        header("Content-Disposition: attachment; filename= Project " . $_POST['download'] . " ". $filename);
+// Create a new zip archive
+$zip = new ZipArchive();
+$filename = "Project_" . $_POST['download'] . "_Files";
 
-        // Convert the BLOB to a DOCX file and output it to the user
-        echo $row['Attachment']; exit;
-    } else {
-        echo "Error: File not found.";
-    }
+// Create the zip archive if it doesn't already exist
+if ($zip->open($filename, ZipArchive::CREATE) !== TRUE) {
+    exit("Unable to create zip archive");
+}
 
-    mysqli_close($connection);
+// Loop through the results and add each blob to the zip archive
+while ($row = $result->fetch_assoc()) {
+    // Add the blob data to the zip archive with the file name from the database
+    $zip->addFromString($row['AttachmentName'], $row['Attachment']);
+}
+
+// Close the zip archive
+$zip->close();
+
+// Set the HTTP headers to force the file download
+header("Content-type: application/zip");
+header("Content-Disposition: attachment; filename=$filename");
+header("Content-length: " . filesize($filename));
+header("Pragma: no-cache");
+header("Expires: 0");
+
+// Output the file to the browser for download
+readfile("$filename");
+
+// Delete the file from the server
+unlink("$filename");
+
+// Close the database connection
+$connection->close();
+
 }
 
 if (isset($_POST['review'])) {
