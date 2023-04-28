@@ -554,10 +554,6 @@ a.button-prior {
     </form>
    </div>
    <div style="font-size:1.0em">
-      <p>To Do List:<br>
-        1. Add reCaptcha <br>
-        2. hash passwords<br>
-      </p>
     </div>
   <div class="wrapper-footer">
     <div>Date Created</div>

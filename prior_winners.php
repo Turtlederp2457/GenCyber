@@ -223,22 +223,16 @@ a.button-prior {
         <label for="">Prior Events</label> <br>
         <select id="select-event" placeholder="Choose Event">
           <option value="">Choose an Event</option>
-          <option value="event-1">Event 1</option>
-          <option value="event-2">Event 2</option>
-          <option value="event-3">Event 3</option>
-          <option value="event-4">Event 4</option>
+          <option value="event-1">Placeholder 1</option>
+          <option value="event-2">Placeholder 2</option>
+          <option value="event-3">Placeholder 3</option>
+          <option value="event-4">Placeholder 4</option>
         </select>
       </p>
     </div>
     <div>main content here</div>
     <div style="font-size:1.0em; margin:0">
-      <p>
-        To Do List:<br>
-        1. Begin adding prior winners to database <br>
-        2. Pull data from selected event <br>
-        3. Display retrieved data <br>
-        4. ...
-      </p>
+      
     </div>
   </div>
   <div class="wrapper-footer">

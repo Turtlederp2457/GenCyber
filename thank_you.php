@@ -174,29 +174,9 @@ a.button-prior {
   padding-bottom: 3px;
 }
 </style>
-<p style="font-size: 1.2em" class="error">This is my post-registration page</p>
 <body>
   <header>
-    <form class="login-form" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-      <button class="button-general" type="submit" name="login">Log In</button>
-      <p>
-        <label for="">Email</label>
-        <input type="text" name="user_email" value="<?php echo $login_user_email;?>">
-      </p>
-      <p>
-        <label for="">Password</label>
-        <input type="text" name="user_password" value="<?php echo $user_password;?>">
-      </p>
-      <a class="button-general" href="http://localhost/GenCyber/register.php">Register</a>
-      <br>
-      <div>
-        <span class="error"><?php echo $login_email_error;?></span>
-        <span class="error"><?php echo $login_error;?></span>
-      </div>
-      <div>
-        <span class="error"><?php echo $login_password_error;?></span>
-      </div>
-    </form>
+    
   </header>
   <div class="wrapper-logos">
     <a class="center" target="_blank" href="https://www.marshall.edu/">
@@ -212,7 +192,7 @@ a.button-prior {
   <div class="wrapper-menu">
     <a class="button-prior" href="http://localhost/GenCyber/newHome.php">Home</a>
     <a class="button-prior" href="http://localhost/GenCyber/prior_winners.php">Prior Winner's</a>
-    <a class="button-prior" href="http://localhost/GenCyber/contact/contact.php">Contact Us</a>
+    <a class="button-prior" href="http://localhost/GenCyber/contact.php">Contact Us</a>
   </div>
   <div style="min-height:60vh" class="wrapper-main">
     <div></div>
