@@ -311,12 +311,6 @@ table, th, td {
       </form>
     </div>
     <div>
-      <p>
-        To Do List:<br>
-		1. Download project content upon completion/submission <br>
-        2. Reactivate Event button <br>
-        3. The project can be archived by admin for the next round of competition. <br>
-      </p>
     </div>
   </div>
   <div class="wrapper-footer">
