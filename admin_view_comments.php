@@ -4,12 +4,16 @@ if(isset($_POST['logout'])){
     include "logout.php";
 }
 session_start();
+/* get and set judge ID
+ * Not currently being used
+ */
 if(isset($_GET['confirm_btn'])){
   if ($_SERVER["REQUEST_METHOD"] == "GET") {
     if ($_GET['judge_selection'] == ""){
       $_SESSION['judge_id'] = false;
     } else {
       $_SESSION['judge_id'] = $_GET['judge_selection'];
+      
     }
   }
 }
@@ -20,7 +24,7 @@ if(isset($_GET['confirm_btn'])){
 <head>
 <!-- Required meta tags --> 
 <meta charset = "utf-8"/>
-<meta name="sitePath" content="http://localhost/GenCyber/winner_management.php" />
+<meta name="sitePath" content="http://localhost/GenCyber/admin_view_comments.php" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
 <!-- Add your name here one you have helped write this code -->
 <meta name="author" content="Gatlin Zornes">
@@ -270,10 +274,10 @@ table, th, td {
     <div id="judge_selection_div" style="display:none">
       <form id="judge_selection_form" method="get" action="<?php echo $_SERVER['PHP_SELF'];?>">
         <div style="height:50%; grid-area:prompt; margin-top: 0; margin-bottom:0">Select a judge from the dropdown menu to view their comments</div>
-        <?php $review_query = "SELECT R.JudgeID, J.First_name, J.Last_name FROM Reviews as R 
-              INNER JOIN Judges as J on R.JudgeID = J.JudgeID
-              WHERE ProjectID = " . $_SESSION['project_id'];
-        $result = mysqli_query($connection, $review_query);?>
+        <?php //$review_query = "SELECT R.JudgeID, J.First_name, J.Last_name FROM Reviews as R 
+//               INNER JOIN Judges as J on R.JudgeID = J.JudgeID
+//               WHERE ProjectID = " . $_SESSION['project_id'];
+        //$result = mysqli_query($connection, $review_query);?>
         <select onchange="displayComments()" id="judge_dropdown" style="grid-area: dropdown;" name="judge_selection">
           <option value="">Select a Judge</option>>
           <?php foreach($result as $key=> $field){?>
@@ -292,8 +296,7 @@ table, th, td {
         $originality = $row['Originality_comment'];
         $creativity = $row['Creativity_comment'];
         $clarity = $row['Clarity_comment'];
-        $explanation = $row['Explanation_comment'];
-        
+        $explanation = $row['Explanation_comment'];      
 
       ?>
         <label style="grid-area:completeness; margin-left: 0" id="completeness" for="completeness">Completeness :</label>
@@ -307,6 +310,7 @@ table, th, td {
         <label style="grid-area:explanation; margin-left: 0" id="explanation" for="project_title">Explanation :</label>
         <div style="grid-area:explanation_div" id="explanation_div"><?php echo $explanation;?></div>
     </div>
+<!--     Used for dropdown value retrieval/change. not currently being used -->
     <script type="text/javascript">
       var judge_select = document.getElementById("judge_dropdown");
       var comp_div = document.getElementById("completeness_div");
