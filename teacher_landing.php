@@ -236,7 +236,7 @@ session_start();
     </div>
     <div style="font-size:1.0em; min-height:60vh" class="wrapper-main">
         <div style="margin:0">
-            <!-- Left Panel -->
+            <!-- Left Panel --><h4>Use the two buttons above to <br>navigate the Teacher Dashboard.</h4>
         </div>
         <div style="font-size:24px; min-height:60vh;">
             <center>
@@ -281,7 +281,7 @@ session_start();
                     ?>
                 </table><br>
                 <br>
-                Use the two buttons above to <br>navigate the Teacher Dashboard.
+                
             </center>
         </div>
         <div>
