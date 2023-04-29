@@ -348,7 +348,7 @@ table, th, td {
           <th>User Email</th>
           <th>First Name</th>
           <th>Last Name</th>
-          <th>Deactive</th>
+          <th>Activate</th>
         </tr>
         <?php
           $result = mysqli_query($connection,"call AllInactiveTeachers()");
