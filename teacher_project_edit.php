@@ -108,7 +108,7 @@ if (isset($_POST['uploadA'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
     <!-- Add your name here one you have helped write this code -->
     <meta name="author" content="Gatlin Zornes, Layne McNeely">
-    <title>Judge Management - Marshall University GenCyber</title>
+    <title>Edit Project - Marshall University GenCyber</title>
     <!-- <link rel="stylesheet" type="text/css" href="/GenCyber/stylesheets/newHome_stylesheet.css" />  -->
     <!-- Might need this -->
     <!-- <base href="http://localhost/GenCyber/" target="_self"> -->
