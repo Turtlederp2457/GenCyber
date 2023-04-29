@@ -219,7 +219,6 @@ a.button-prior {
   <div style="min-height:65vh" class="wrapper-main">
     <div style="margin:0">
       <!-- <p><?php if(isset($_SESSION['user_name'])) { printf("Welcome, <span class=error>".$_SESSION['user_name']); } else { printf("Welcome. Please log in");}?></p><br> -->
-      <?php echo "valid login creds: ". "<br>". "[Admin] Admin@Admin.com, Admin". "<br>"."[Teacher] Teacher@Teacher.com, Teacher". "<br>". "[Judge] Judge@Judge.com, Judge"?>
     </div>
     <div>
       <p>
@@ -227,12 +226,6 @@ a.button-prior {
         <br>The goals of the program are to increase interest in cybersecurity careers and diversity in the cybersecurity workforce of the nation, <br> help all students 
         understand correct and safe online behavior and how they can be good digital citizens, and improve teaching methods for the delivery of cybersecurity content in K-12 curricula. <br>
         <br>If you are interested in joining, please click <a href="http://localhost/GenCyber/register.php">here</a>
-      </p>
-    </div>
-    <div style="font-size:1.0em; margin:0">
-      <p>To Do List:<br>
-        1. Fix errors on login form to prevent $login_error from always showing up<br>
-        2. Finalize layout for content area <br>
       </p>
     </div>
   </div>
